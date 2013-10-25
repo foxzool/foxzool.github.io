@@ -1,4 +1,4 @@
 User-agent: *
 Disallow: 
 
-Sitemap: http://zool.me/sitemap.xml 
+Sitemap: http://foxzool.github.io/sitemap.xml 
