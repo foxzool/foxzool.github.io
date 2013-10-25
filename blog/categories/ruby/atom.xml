@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: ruby | ZoOL => Blog]]></title>
+  <link href="http://zool.me/blog/categories/ruby/atom.xml" rel="self"/>
+  <link href="http://zool.me/"/>
+  <updated>2013-10-25T11:49:24+08:00</updated>
+  <id>http://zool.me/</id>
+  <author>
+    <name><![CDATA[ZoOL]]></name>
+    <email><![CDATA[zhooul@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[修复安装gems时Errno::ETIMEDOUT: Operation timed out - connect(2)的错误]]></title>
+    <link href="http://zool.me/blog/2011/02/28/When-a-repair-installation-of-gems-Errno%3A%3A-ETIMEDOUT%3A-Operation-timed-out---connect-%282%29-of-the-error/"/>
+    <updated>2011-02-28T00:00:00+08:00</updated>
+    <id>http://zool.me/blog/2011/02/28/When-a-repair-installation-of-gems-Errno::-ETIMEDOUT:-Operation-timed-out---connect-(2)-of-the-error</id>
+    <content type="html"><![CDATA[<p>这两天更新gems出现下面的错误
+<div>
+  <pre><code class='ruby'>➜  ~  gem install rails    &lt;br/&gt;
+ERROR:  Could not find a valid gem &amp;lsquo;rails&amp;rsquo; (&gt;= 0) in any repository
+ERROR:  While executing gem &amp;hellip; (Gem::RemoteFetcher::FetchError)&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Errno::ETIMEDOUT: Connection timed out - connect(2) (http://rubygems.org/latest_specs.4.8.gz)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+</p>
+
+<p>经检查和GFW无关，是rubygems的DNS
+调整问题</p>
+
+<h1>问题解决的最好方法方法</h1>
+
+<p>使用google的DNS
+8.8.8.8 / 8.8.4.4</p>
+
+<h1>另一种解决方式</h1>
+
+<p>修改rubygems的source源
+<div>
+  <pre><code class='ruby'>&lt;/p&gt;
+
+&lt;h1&gt;删除原有gem source&lt;/h1&gt;
+
+&lt;p&gt;gem source -r &lt;a href=&quot;http://rubygems.org/&quot;&gt;http://rubygems.org/&lt;/a&gt;
+gem source -r &lt;a href=&quot;http://production.s3.rubygems.org/&quot;&gt;http://production.s3.rubygems.org/&lt;/a&gt;&lt;/p&gt;
+
+&lt;h1&gt;增加新source源&lt;/h1&gt;
+
+&lt;p&gt;gem source -a  &lt;a href=&quot;http://production.s3.rubygems.org.s3.amazonaws.com/&quot;&gt;http://production.s3.rubygems.org.s3.amazonaws.com/&lt;/a&gt;</code></pre>
+</div>
+</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[建立sproutcore应用]]></title>
+    <link href="http://zool.me/blog/2011/02/22/Application-to-establish-sproutcore/"/>
+    <updated>2011-02-22T00:00:00+08:00</updated>
+    <id>http://zool.me/blog/2011/02/22/Application-to-establish-sproutcore</id>
+    <content type="html"><![CDATA[<p>sproutcore是通过rubygems来安装的
+<div>
+  <pre><code class='bash'>gem install sproutcore</code></pre>
+</div>
+</p>
+
+<p>建立应用
+<div>
+  <pre><code class='bash'>sc-init HelloWorld</code></pre>
+</div>
+</p>
+
+<p>启动应用
+<div>
+  <pre><code class='bash'>cd HelloWorld
+sc-server</code></pre>
+</div>
+</p>
+
+<p>便会通过启动thin在locahost:4020提供应用服务</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[ruby中去除字符串空格的方法]]></title>
+    <link href="http://zool.me/blog/2011/01/25/ruby-string-remove-space-methods/"/>
+    <updated>2011-01-25T00:00:00+08:00</updated>
+    <id>http://zool.me/blog/2011/01/25/ruby-string-remove-space-methods</id>
+    <content type="html"><![CDATA[<p>使用 String#strip方法,去除所有空格
+<div>
+  <pre><code class='ruby'>&amp;ldquo;    hello    &amp;rdquo;.strip   #=&gt; &amp;ldquo;hello&amp;rdquo;
+&amp;ldquo;\tgoodbye\r\n&amp;rdquo;.strip   #=&gt; &amp;ldquo;goodbye&amp;rdquo;</code></pre>
+</div>
+</p>
+
+<p>另外lstrip和rstrip分别去除字符串左右两端的空格
+<div>
+  <pre><code class='ruby'>&amp;ldquo;  hello  &amp;rdquo;.lstrip   #=&gt; &amp;ldquo;hello  &amp;rdquo;
+&amp;ldquo;hello&amp;rdquo;.lstrip       #=&gt; &amp;ldquo;hello&amp;rdquo;
+&amp;ldquo;  hello  &amp;rdquo;.rstrip   #=&gt; &amp;ldquo;  hello&amp;rdquo;
+&amp;ldquo;hello&amp;rdquo;.rstrip       #=&gt; &amp;ldquo;hello&amp;rdquo;</code></pre>
+</div>
+</p>
+
+<p>上述方法是返回字符串的copy,如要改变原字符串对象，使用 String#strip!, String#lstrip!, String#rstrip!。 如果对象没有改变则返回nil
+<div>
+  <pre><code class='ruby'>&amp;ldquo;hello&amp;rdquo;.rstrip!      #=&gt; nil</code></pre>
+</div>
+</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[ruby-新年快乐]]></title>
+    <link href="http://zool.me/blog/2010/12/29/ruby-Happy-New-Year/"/>
+    <updated>2010-12-29T00:00:00+08:00</updated>
+    <id>http://zool.me/blog/2010/12/29/ruby-Happy-New-Year</id>
+    <content type="html"><![CDATA[<p>根据网上的源码改编</p>
+
+<p><div>
+  <pre><code class='bash'>ruby -e &amp;ldquo;((1..20).to_a+[6]&lt;em&gt;4).each{|i|puts (&amp;lsquo;#&amp;rsquo;&lt;/em&gt;i*2).center(80)};puts;puts &amp;lsquo;Happy New Year&amp;rsquo;.center(80)&amp;rdquo;</code></pre>
+</div>
+</p>
+
+<p>关键是center方法
+<div>
+  <pre><code class='bash'>&amp;ldquo;Happy New Year&amp;rdquo;.center(80)</code></pre>
+</div>
+
+就是将字符串在80个字符的长度内居中</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[使用to_lang翻译ruby字符串]]></title>
+    <link href="http://zool.me/blog/2010/12/29/Ruby-string-translation-using-to_lang/"/>
+    <updated>2010-12-29T00:00:00+08:00</updated>
+    <id>http://zool.me/blog/2010/12/29/Ruby-string-translation-using-to_lang</id>
+    <content type="html"><![CDATA[<p><a href="https://github.com/jimmycuadra/to_lang">github地址</a></p>
+
+<p>我的博客就是用这个gem来翻译文章标题的</p>
+
+<h1>安装</h1>
+
+<p><div>
+  <pre><code class='bash'>gem install to_lang</code></pre>
+</div>
+</p>
+
+<h1>使用</h1>
+
+<p>ToLang必须初始配置一个google api key</p>
+
+<p><a href="https://code.google.com/apis/console">api key 获取地址</a></p>
+
+<p><div>
+  <pre><code class='ruby'>require ‘to_lang’
+ToLang.start(‘YOUR_GOOGLE_TRANSLATE_API_KEY’)</code></pre>
+</div>
+</p>
+
+<p>然后就可以变魔术了
+<div>
+  <pre><code class='ruby'>&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;&amp;lsquo;你好&amp;rsquo;.to_english
+ =&gt; &amp;ldquo;Hello&amp;rdquo;
+&amp;lsquo;hotfix&amp;rsquo;.to_simplified_chinese
+ =&gt; &amp;ldquo;修复&amp;rdquo;
+&amp;ldquo;Rails 有非常強大的路徑指派功能，讓我們看看有哪些設定方式吧&amp;rdquo;.to_simplified_chinese_from_traditional_chinese
+ =&gt; &amp;ldquo;Rails 有非常强大的路径指派功能，让我们看看有哪些设定方式吧&amp;rdquo;</code></pre>
+</div>
+</p></blockquote>
+
+<p>也可以直接用String#translate方法
+<div>
+  <pre><code class='ruby'>“hello world”.translate(‘es’)
+=&gt; “hola mundo”
+“a pie”.translate(‘es’, :from =&gt; ‘en’)
+=&gt; “un pastel”</code></pre>
+</div>
+</p>
+
+<h1>所有支持的语言</h1>
+
+<p><div>
+  <pre><code class='bash'>to_afrikaans
+to_albanian
+to_arabic
+to_basque
+to_belarusian
+to_bulgarian
+to_catalan
+to_simplified_chinese
+to_traditional_chinese
+to_croatian
+to_czech
+to_danish
+to_dutch
+to_english
+to_estonian
+to_filipino
+to_finnish
+to_french
+to_galician
+to_german
+to_greek
+to_haitian_creole
+to_hebrew
+to_hindi
+to_hungarian
+to_icelandic
+to_indonesian
+to_irish
+to_italian
+to_japanese
+to_latvian
+to_lithuanian
+to_macedonian
+to_malay
+to_maltese
+to_norwegian
+to_persian
+to_polish
+to_portuguese
+to_romanian
+to_russian
+to_serbian
+to_slovak
+to_slovenian
+to_spanish
+to_swahili
+to_swedish
+to_thai
+to_turkish
+to_ukrainian
+to_vietnamese
+to_welsh
+to_yiddish</code></pre>
+</div>
+</p>
+]]></content>
+  </entry>
+  
+</feed>

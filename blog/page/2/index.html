@@ -1,0 +1,1216 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>ZoOL => Blog</title>
+  <meta name="author" content="ZoOL">
+
+  
+  <meta name="description" content="下述内容参考了A Guide to a Nginx, Passenger and RVM Server 首先， 使用 root 帐号登录， 安装git和curl apt-get install curl git-core 使用脚本安装rvm bash &lt; &lt;(curl -L http &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://zool.me/blog/page/2">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="ZoOL => Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">ZoOL => Blog</a></h1>
+  
+    <h2>Something for share</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:zool.me" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/categories/rails/">Rails</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/02/15/ubutnu-configuration-rvm%2C-nginx-and-passenger-of-the-production-environment/">Ubutnu配置rvm,nginx和passenger的生产环境</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-02-15T00:00:00+08:00" pubdate data-updated="true">Feb 15<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>下述内容参考了<a href="http://blog.ninjahideout.com/posts/a-guide-to-a-nginx-passenger-and-rvm-server">A Guide to a Nginx, Passenger and RVM Server</a></p>
+
+<p>首先， 使用 root 帐号登录，</p>
+
+<p>安装git和curl</p>
+
+<div>
+  <pre><code class='bash'>apt-get install curl git-core</code></pre>
+</div>
+
+
+<p>使用脚本安装rvm</p>
+
+<div>
+  <pre><code class='bash'>bash &lt; &lt;(curl -L http://bit.ly/rvm-install-system-wide)</code></pre>
+</div>
+
+
+<p>脚本会自动创建一个rvm组，并将root用户加入</p>
+
+<p>编辑 /root/.bashrc和/etc/skel/.bashrc
+将</p>
+
+<div>
+  <pre><code class='bash'>[ -z &quot;$PS!&quot;]  &amp;&amp; return</code></pre>
+</div>
+
+
+<p>替换为</p>
+
+<div>
+  <pre><code class='bash'>if [[ -n &quot;$PS1&quot; ]]; then</code></pre>
+</div>
+
+
+<p>在文件最后加入</p>
+
+<div>
+  <pre><code class='bash'>fi
+if groups | grep -q rvm ; then
+  source &quot;/usr/local/lib/rvm&quot;
+fi</code></pre>
+</div>
+
+
+<p>配置用户</p>
+
+<div>
+  <pre><code class='bash'>#增加zool用户
+adduser zool
+#将zool加入rvm组
+adduser zool rvm</code></pre>
+</div>
+
+
+<p>登录zool用户并测试</p>
+
+<div>
+  <pre><code class='bash'>type rvm | head -n1</code></pre>
+</div>
+
+
+<p>如果显示 rvm is a function 则表示安装正确</p>
+
+<p>安装ree依赖组件</p>
+
+<div>
+  <pre><code class='bash'>aptitude install build-essential bison openssl libreadline5 libreadline-dev \
+curl git-core zlib1g zlib1g-dev libssl-dev vim libsqlite3-0 libsqlite3-dev \
+sqlite3 libreadline-dev libxml2-dev git-core subversion autoconf</code></pre>
+</div>
+
+
+<p>安装ree</p>
+
+<div>
+  <pre><code class='bash'>rvm install ree</code></pre>
+</div>
+
+
+<p>设为默认环境</p>
+
+<div>
+  <pre><code class='bash'>rvm use ree --default</code></pre>
+</div>
+
+
+<p>安装passenger和nginx</p>
+
+<div>
+  <pre><code class='bash'>gem install passenger
+rvmsudo passenger-install-nginx-module</code></pre>
+</div>
+
+
+<p>配置nginx里的ruby环境</p>
+
+<div>
+  <pre><code class='bash'>passenger_root /usr/local/rvm/gems/ree-1.8.7-2010.02/gems/passenger-3.0.0;
+    passenger_ruby /usr/local/rvm/wrappers/ree-1.8.7-2010.02/ruby;</code></pre>
+</div>
+
+
+<p>设置nginx开机脚本</p>
+
+<div>
+  <pre><code class='bash'>curl -L http://bit.ly/nginx-ubuntu-init-file &gt; /etc/init.d/nginx
+chmod +x /etc/init.d/nginx
+update-rc.d nginx defaults
+/etc/init.d/nginx start</code></pre>
+</div>
+
+
+<p>原文中后面的step6,7关于Capistrano的环境配置以后再另文详述</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/02/09/rails3-new-project-template/">Rails3新建项目模板</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-02-09T00:00:00+08:00" pubdate data-updated="true">Feb 9<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>rails 新建项目时可以使用-m 参数来使用模板生成新项目</p>
+
+<h1>安装需求</h1>
+
+<p>*nix系统</p>
+
+<p>git</p>
+
+<p>sqlite3/mysql等环境已经安装完毕</p>
+
+<p>rails 3.0.4(之前版本不能使用https的模板地址)</p>
+
+<h1>样例</h1>
+
+<div>
+  <pre><code class='ruby'>rails new my_app -T -J -m https://gist.github.com/777670.txt</code></pre>
+</div>
+
+
+<p>就会自动生成新项目，安装一些gem,如
+devise
+haml
+jquery
+rspec
+等等
+同时自动迁移，删除index.html等等不必要文件。</p>
+
+<p><a href="https://gist.github.com/777670">https://gist.github.com/777670</a> 是我自己配置文件，里面的配置可能不适合每个人， 可以自行fork修改。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/02/02/rails-in-the-method-of-handling-large-quantities-of-data/">Rails中处理大批量数据的方法</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-02-02T00:00:00+08:00" pubdate data-updated="true">Feb 2<span>nd</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>在实际运用中，我们要对每个用户发一封信的话。 一般的写法是</p>
+
+<div>
+  <pre><code class='ruby'>User.all.each {|user|
+  NewsLetter.weekly_deliver(user)
+}</code></pre>
+</div>
+
+
+<p>当数据条目超过1000时， 这样的命令会占用大量的内存。</p>
+
+<p>rails里使用find_each方法来处理这样的情况</p>
+
+<div>
+  <pre><code class='ruby'>User.all.each {|user|
+  NewsLetter.weekly_deliver(user)
+}</code></pre>
+</div>
+
+
+<p>默认是1000条一批
+可以用下面的参数指定一批的条数， 还可以指定开始的主键ID</p>
+
+<div>
+  <pre><code class='ruby'>User.find_each(:batch_size =&gt; 5000, :start =&gt; 2000) {|user|
+  NewsLetter.weekly_deliver(user)
+}</code></pre>
+</div>
+
+
+<p>find_each 是逐条处理对象， 有另外一个find_in_batches是按数组来处理</p>
+
+<div>
+  <pre><code class='ruby'>Person.where(&quot;age &gt; 21&quot;).find_in_batches do |group|
+    sleep(50) # Make sure it doesn&#39;t get too crowded in there!
+    group.each { |person| person.party_all_night! }
+  end</code></pre>
+</div>
+
+
+<p>看源码， find_each是对find_in_batches的包装</p>
+
+<div>
+  <pre><code class='ruby'># File activerecord/lib/active_record/relation/batches.rb, line 19
+    def find_each(options = {})
+      find_in_batches(options) do |records|
+        records.each { |record| yield record }
+      end
+
+      self
+    end</code></pre>
+</div>
+
+
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/02/02/Set-p3p-header-rails/">Rails中设置p3p头</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-02-02T00:00:00+08:00" pubdate data-updated="true">Feb 2<span>nd</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>由于ie6,7的bug，无法跨iframe保存cookies，所以需要设置p3p头</p>
+
+<div>
+  <pre><code class='ruby'>class ApplicationController &lt; ActionController::Base
+  ...
+ 
+  before_filter  :set_p3p
+
+  def set_p3p
+    response.headers[&quot;P3P&quot;]=&#39;CP=&quot;CAO PSA OUR&quot;&#39;
+  end</code></pre>
+</div>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/01/30/Tasks-plug-in-whenever-the-timing-rails/">Rails的定时任务插件whenever</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-01-30T00:00:00+08:00" pubdate data-updated="true">Jan 30<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>在做web应用时，有时会需要定时做一些操作，如发邮件，统计信息等。
+这些都是需要放在后台来执行, whenever就是这样的一个插件，使用ruby强大的DSL， 高效的配置生成定时任务。
+注意，whenever使用的是crontab定时器，所以这个gem在windows上无效。</p>
+
+<p><a href="https://github.com/javan/whenever">github地址</a></p>
+
+<h1>安装</h1>
+
+<div>
+  <pre><code class='bash'>gem &#39;whenever&#39;, :require =&gt; false</code></pre>
+</div>
+
+
+<h1>开始配置</h1>
+
+<div>
+  <pre><code class='bash'>cd /path/to/myapp/
+wheneverize .
+#会在config目录下生成一个schedule.rb文件</code></pre>
+</div>
+
+
+<h1>配置文件说明</h1>
+
+<p>每个配置都是在一个叫every的block里面配置
+运行频率 .minutes, .hours, .days, .months
+可以运行任务 runner rake command 三种</p>
+
+<h1>例子</h1>
+
+<div>
+  <pre><code class='bash'>#每隔10分钟运行一次
+every 10.minutes do
+  #等同于 rails runner MyModel.some_process
+  runner &quot;MyModel.some_process&quot;
+  #等同于 rake my:rake:task
+  rake &quot;my:rake:task&quot;  
+  #等同于在终端执行 /usr/bin/my_great_command
+  command &quot;/usr/bin/my_great_command&quot; 
+end</code></pre>
+</div>
+
+
+<p>whenever默认使用production环境，可以在配置文件里另外定义</p>
+
+<div>
+  <pre><code class='bash'>set :environment, :autotest
+  #或单独指定
+  runner &quot;MyModel.some_process&quot;, :environment =&gt; :autotest</code></pre>
+</div>
+
+
+<h1>高级配置</h1>
+
+<h1>使用at参数来指定分钟</h1>
+
+<div>
+  <pre><code class='bash'>#每隔两个小时23分钟
+every 2.hours, :at =&gt; 23 do
+#每隔两天在上午4:30
+every 2.days, :at =&gt; &#39;4:30am&#39; do
+#每周五晚从05:00到23:45每隔15分钟
+every :friday, :at =&gt; (&#39;05&#39;..&#39;23&#39;).to_a.collect {|x| [&quot;#{x}:00&quot;,&quot;#{x}:15&quot;,&quot;#{x}:30&quot;,&quot;#{x}:45&quot;]}.flatten do</code></pre>
+</div>
+
+
+<h1>与Capistrano结合</h1>
+
+<p>编辑Capistrano的配置文件config/deploy.rb, 加入</p>
+
+<div>
+  <pre><code class='bash'>require &quot;whenever/capistrano&quot;
+...
+after &quot;deploy:symlink&quot;, &quot;deploy:update_crontab&quot;
+  namespace :deploy do
+    desc &quot;Update the crontab file&quot;
+    task :update_crontab, :roles =&gt; :db do
+      run &quot;cd #{release_path} &amp;&amp; whenever --update-crontab #{application}&quot;
+    end
+  end</code></pre>
+</div>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/01/29/rails-in-the-method-of-operation-of-time/">Rails中对时间的操作方法</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-01-29T00:00:00+08:00" pubdate data-updated="true">Jan 29<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>做web应用，和时间打交道是不可免的。rails对ruby的时间模块做了扩展。
+本文作于2011年1月29日, ruby版本为1.8.7, rails版本为3.0.3</p>
+
+<h1>基本的时间转换</h1>
+
+<div>
+  <pre><code class='ruby'>&gt;&gt; now=Time.now
+=&gt; Sat Jan 29 21:47:07 0800 2011
+#utc秒数互相转换
+&gt;&gt; now.to_i
+=&gt; 1296308827
+&gt;&gt; Time.at(1296308827)
+=&gt; Sat Jan 29 21:47:07 0800 2011
+#当前时间的一些变量
+&gt;&gt; now.sec
+=&gt; 7
+&gt;&gt; now.min
+=&gt; 47
+&gt;&gt; now.hour
+=&gt; 21
+&gt;&gt; now.month
+=&gt; 1
+&gt;&gt; now.year
+=&gt; 2011
+#现在是星期几(注意!!!周日是返回 0 )
+&gt;&gt; now.wday
+=&gt; 6
+#现在是本月第几天
+&gt;&gt; now.day
+=&gt; 29
+#现在是今年第几天
+&gt;&gt; now.yday
+=&gt; 29
+#时间参数的数组
+&gt;&gt; now.to_a
+=&gt; [7, 47, 21, 29, 1, 2011, 6, 29, false, &quot;CST&quot;]</code></pre>
+</div>
+
+
+<h1>时间化输出</h1>
+
+<div>
+  <pre><code class='ruby'>&gt;&gt; now.strftime(&quot;%Y-%m-%d %H:%M:%S&quot;)
+=&gt; &quot;2011-01-29 21:47:07&quot;</code></pre>
+</div>
+
+
+<p>参数解释如下</p>
+
+<div>
+  <pre><code class='bash'>%a - 星期几的英文简写 (``Sun&#39;&#39;)
+  %A - 星期几的英文全称 (``Sunday&#39;&#39;)
+  %b - 月份的英文简写 (``Jan&#39;&#39;)
+  %B - 月份的英文全称 (``January&#39;&#39;)
+  %c - 默认的首选本地时间输出格式
+  %d - 本月第几天 (01..31)
+  %H - 24小时制的小时 (00..23)
+  %I - 12小时制的小时 (01..12)
+  %j - 今年的第几天 (001..366)
+  %m - 月份 (01..12)
+  %M - 分钟 (00..59)
+  %p - 上午还是下午 (``AM&#39;&#39;  or  ``PM&#39;&#39;)
+  %S - 秒数 (00..60)
+  %U - 从星期天算一周开始的本年第几周 (00..53)
+  %W - 从星期一算一周开始的本年第几周 (00..53)
+  %w - 现在是星期几 (周日是0 , 0..6)
+  %x - 默认的日期输出格式 (&quot;01/29/11&quot;)
+  %X - 默认的时间输出格式 (&quot;21:47:07&quot;)
+  %y - 年份的后两位 (00..99)
+  %Y - 年份
+  %Z - 时区名
+  %% - 输出%字符</code></pre>
+</div>
+
+
+<p>以上是ruby的基本方法，rails对其做了更多的扩展</p>
+
+<div>
+  <pre><code class='ruby'>#重写了to_s方法，能够接受参数
+&gt;&gt; now.to_s
+=&gt; &quot;Sat Jan 29 21:47:07 +0800 2011&quot;
+&gt;&gt; now.to_s(:db)
+=&gt; &quot;2011-01-29 21:47:07&quot;
+&gt;&gt; now.to_s(:number)
+=&gt; &quot;20110129214707&quot;
+&gt;&gt; now.to_s(:time)
+=&gt; &quot;21:47&quot;
+&gt;&gt; now.to_s(:short)
+=&gt; &quot;29 Jan 21:47&quot;
+&gt;&gt; now.to_s(:long)
+=&gt; &quot;January 29, 2011 21:47&quot;
+&gt;&gt; now.to_s(:long_ordinal)
+=&gt; &quot;January 29th, 2011 21:47&quot;
+&gt;&gt; now.to_s(:rfc822)
+=&gt; &quot;Sat, 29 Jan 2011 21:47:07 +0800&quot;</code></pre>
+</div>
+
+
+<p>如果要自己设计时间输出格式，按下面方法来，新建一个配置文件</p>
+
+<div>
+  <pre><code class='ruby'># config/initializers/time_formats.rb
+  Time::DATE_FORMATS[:month_and_year] = &quot;%B %Y&quot;
+  Time::DATE_FORMATS[:short_ordinal] = lambda { |time| time.strftime(&quot;%B #{time.day.ordinalize}&quot;) }</code></pre>
+</div>
+
+
+<p>rails对日期的一些扩展</p>
+
+<div>
+  <pre><code class='ruby'>#指定时间
+&gt;&gt; now.change(:year=&gt;2012, :month=&gt;12, :day =&gt; 21, :hour =&gt; 0, :min =&gt; 0, :sec =&gt; 0, :usec =&gt; 0)
+=&gt; Fri Dec 21 00:00:00 0800 2012
+
+#begginning家族
+&gt;&gt; now.beginning_of_day
+=&gt; Sat Jan 29 00:00:00 0800 2011
+&gt;&gt; now.midnight
+=&gt; Sat Jan 29 00:00:00 0800 2011
+&gt;&gt; now.beginning_of_week
+=&gt; Mon Jan 24 00:00:00 0800 2011
+&gt;&gt; now.beginning_of_month
+=&gt; Sat Jan 01 00:00:00 0800 2011
+&gt;&gt; now.beginning_of_quarter
+=&gt; Sat Jan 01 00:00:00 0800 2011
+&gt;&gt; now.beginning_of_year
+=&gt; Sat Jan 01 00:00:00 0800 2011
+#end家族
+&gt;&gt; now.end_of_day
+=&gt; Sat Jan 29 23:59:59 0800 2011
+&gt;&gt; now.end_of_week
+=&gt; Sun Jan 30 23:59:59 0800 2011
+&gt;&gt; now.end_of_month
+=&gt; Mon Jan 31 23:59:59 0800 2011
+&gt;&gt; now.end_of_quarter
+=&gt; Thu Mar 31 23:59:59 0800 2011
+&gt;&gt; now.end_of_year
+=&gt; Sat Dec 31 23:59:59 0800 2011
+#时间的魔术方法
+&gt;&gt; now.yesterday
+=&gt; Fri Jan 28 21:47:07 0800 2011
+&gt;&gt; now.tomorrow
+=&gt; Sun Jan 30 21:47:07 0800 2011
+&gt;&gt; now.next_week
+=&gt; Mon Jan 31 00:00:00 0800 2011
+&gt;&gt; now.next_month
+=&gt; Mon Feb 28 21:47:07 0800 2011
+&gt;&gt; now.next_year
+#注意没有prev_week
+&gt;&gt; now.prev_month
+=&gt; Wed Dec 29 21:47:07 0800 2010
+&gt;&gt; now.prev_year
+=&gt; Fri Jan 29 21:47:07 0800 2010
+#今日已过秒数
+&gt;&gt; now.seconds_since_midnight
+=&gt; 78427.615017
+#日期输出
+&gt;&gt; now.to_date
+=&gt; Sat, 29 Jan 2011
+&gt;&gt; now.to_datetime
+=&gt; Sat, 29 Jan 2011 21:47:07 0800
+#按秒数计算
+&gt;&gt; now.ago(3600)
+=&gt; Sat Jan 29 20:47:07 0800 2011
+&gt;&gt; now.since(3600)
+=&gt; Sat Jan 29 22:47:07 0800 2011</code></pre>
+</div>
+
+
+<p>实际上还有很多方法没有列出，具体使用还是参考rails的api手册为准。</p>
+
+<p>另外有一个rails插件bystar对此做了更多的扩展, 后面会另外写一篇文章来说明</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/01/25/ruby-string-remove-space-methods/">Ruby中去除字符串空格的方法</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-01-25T00:00:00+08:00" pubdate data-updated="true">Jan 25<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>使用 String#strip方法,去除所有空格</p>
+
+<div>
+  <pre><code class='ruby'>&quot;    hello    &quot;.strip   #=&gt; &quot;hello&quot;
+&quot;\tgoodbye\r\n&quot;.strip   #=&gt; &quot;goodbye&quot;</code></pre>
+</div>
+
+
+<p>另外lstrip和rstrip分别去除字符串左右两端的空格</p>
+
+<div>
+  <pre><code class='ruby'>&quot;  hello  &quot;.lstrip   #=&gt; &quot;hello  &quot;
+&quot;hello&quot;.lstrip       #=&gt; &quot;hello&quot;
+&quot;  hello  &quot;.rstrip   #=&gt; &quot;  hello&quot;
+&quot;hello&quot;.rstrip       #=&gt; &quot;hello&quot;</code></pre>
+</div>
+
+
+<p>上述方法是返回字符串的copy,如要改变原字符串对象，使用 String#strip!, String#lstrip!, String#rstrip!。 如果对象没有改变则返回nil</p>
+
+<div>
+  <pre><code class='ruby'>&quot;hello&quot;.rstrip!      #=&gt; nil</code></pre>
+</div>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/01/25/rails-in-some-of-the-ways-to-obtain-information-url/">Rails中获取url信息的一些方法</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-01-25T00:00:00+08:00" pubdate data-updated="true">Jan 25<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>如本机我测试域名为test.blog.zool.it:3000</p>
+
+<p>打开的uri为 /post/Hello-World</p>
+
+<p>fullurl为 <a href="http://test.blog.zool.it:3000/post/Hello-world">http://test.blog.zool.it:3000/post/Hello-world</a></p>
+
+<p>则rails的路由生成一下几个方法</p>
+
+<h1>domain(tld_length = 1)</h1>
+
+<p>取得域名</p>
+
+<div>
+  <pre><code class='ruby'>request.domain #=&gt;  zool.it
+request.domain(2) #=&gt; blog.zool.it</code></pre>
+</div>
+
+
+<h1>subdomain(tld_length = 1)</h1>
+
+<h1>subdomains(tld_length = 1)</h1>
+
+<p>取得子域名</p>
+
+<div>
+  <pre><code class='ruby'>request.subdomain #=&gt;  &quot;test.blog&quot;
+request.subdomain(2) #=&gt; &quot;test&quot;
+request.subdomain #=&gt;  [&quot;test&quot;, &quot;blog&quot;]
+request.subdomain(2) #=&gt; [&quot;test&quot;]</code></pre>
+</div>
+
+
+<h1>host()</h1>
+
+<p>取得主机名</p>
+
+<div>
+  <pre><code class='ruby'>request.host #=&gt; &quot;test.blog.zool.it&quot;</code></pre>
+</div>
+
+
+<h1>host_with_port()</h1>
+
+<p>取得带端口的主机名</p>
+
+<div>
+  <pre><code class='ruby'>request.host_with_port #=&gt; &quot;test.blog.zool.it:3000&quot;</code></pre>
+</div>
+
+
+<h1>raw_host_with_port()</h1>
+
+<p>代理服务器的主机名和端口</p>
+
+<div>
+  <pre><code class='ruby'>request.raw_host_with_port #=&gt; &quot;test.blog.zool.it:3000&quot;</code></pre>
+</div>
+
+
+<h1>port()</h1>
+
+<p>取得由raw_host_with_port()获得的端口数值</p>
+
+<div>
+  <pre><code class='ruby'>request.port #=&gt; 3000</code></pre>
+</div>
+
+
+<h1>port_string()</h1>
+
+<p>取得raw_host_with_port()获得的端口文本字符串</p>
+
+<div>
+  <pre><code class='ruby'>request.port_string #=&gt; &quot;:3000&quot;</code></pre>
+</div>
+
+
+<h1>protocol()</h1>
+
+<p>取得当前使用网络协议</p>
+
+<div>
+  <pre><code class='ruby'>request.protocol #=&gt; &quot;http://&quot;</code></pre>
+</div>
+
+
+<h1>scheme()</h1>
+
+<p>取得网络协议</p>
+
+<div>
+  <pre><code class='ruby'>request.scheme #=&gt; &quot;http&quot;</code></pre>
+</div>
+
+
+<h1>request_uri()</h1>
+
+<p>request请求的uri地址</p>
+
+<div>
+  <pre><code class='ruby'>request.request_uri #=&gt; &quot;/posts/Hello-World&quot;</code></pre>
+</div>
+
+
+<p>server_port</p>
+
+<h1>server_port()</h1>
+
+<p>取得由env[&lsquo;SERVER_PORT&rsquo;]返回的端口值</p>
+
+<div>
+  <pre><code class='ruby'>request.server_port #=&gt; &quot;3000&quot;</code></pre>
+</div>
+
+
+<h1>ssl?()</h1>
+
+<p>当前是否在是用https加密协议</p>
+
+<div>
+  <pre><code class='ruby'>request.ssl?() #=&gt; false</code></pre>
+</div>
+
+
+<h1>standard_port()</h1>
+
+<p>返回网络协议标准端口(http为80, https为443)</p>
+
+<div>
+  <pre><code class='ruby'>request.standard_port #=&gt; 80</code></pre>
+</div>
+
+
+<h1>standard_port?()</h1>
+
+<p>判断当前协议是否是标准端口</p>
+
+<div>
+  <pre><code class='ruby'>request.standard_port? #=&gt; false</code></pre>
+</div>
+
+
+<h1>url()</h1>
+
+<p>取得当前requset完整url</p>
+
+<div>
+  <pre><code class='ruby'>request.url #=&gt; &quot;http://test.blog.zool.it:3000/posts/Hello-World&quot;</code></pre>
+</div>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/12/30/rails3-plug-ins-to-provide-soft-delete/">Rails3中提供软删除的插件</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-12-30T00:00:00+08:00" pubdate data-updated="true">Dec 30<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="https://github.com/teambox/immortal">github地址</a></p>
+
+<p>有时候，我们希望一条记录删除后仍旧保留在数据库里，这样我们可以在日后还有反悔查询的机会。</p>
+
+<p>P.S. 在rails2时代， 这个功能由 acts_as_paranoid  这个插件实现.</p>
+
+<p>代码胜千言</p>
+
+<h1>安装</h1>
+
+<p>在Gemfile里加入插件配置</p>
+
+<div>
+  <pre><code class='bash'>gem &#39;immortal&#39;</code></pre>
+</div>
+
+
+<p>在你要做软删除的model里引用插件</p>
+
+<div>
+  <pre><code class='bash'>class User &lt; ActiveRecord::Base
+  include Immortal
+end</code></pre>
+</div>
+
+
+<p>在users表的字段上加上deleted这个字段</p>
+
+<div>
+  <pre><code class='bash'>rails g migration AddDeletedToUser deleted:boolean
+
+
+class AddDeletedToUser &lt; ActiveRecord::Migration
+  def self.up
+    add_column :users, :deleted, :boolean
+  end
+
+  def self.down
+    remove_column :users, :deleted
+  end
+end</code></pre>
+</div>
+
+
+<p>在控制台里测试</p>
+
+<div>
+  <pre><code class='bash'>&gt;user = User.create(:username =&gt; &#39;zool&#39;)
+ =&gt; #&lt;User id: 1, username: &quot;zool&quot;, created_at: &quot;2010-12-30 12:09:42&quot;, updated_at: &quot;2010-12-30 12:09:42&quot;, deleted: nil&gt;
+&gt;user.destroy
+&gt;User.all =&gt; # []
+&gt;User.find_by_sql(&quot;select * from users;&quot;)
+ =&gt; [#&lt;User id: 1, username: &quot;zool&quot;, created_at: &quot;2010-12-30 12:09:42&quot;, updated_at: &quot;2010-12-30 12:09:42&quot;, deleted: true&gt;] 
+&gt;User.where(&quot;id = 1&quot;).to_sql
+ =&gt; &quot;SELECT \&quot;users\&quot;.* FROM \&quot;users\&quot; WHERE ((\&quot;users\&quot;.\&quot;deleted\&quot; IS NULL OR \&quot;users\&quot;.\&quot;deleted\&quot; = &#39;f&#39;)) AND (id = 1)&quot;</code></pre>
+</div>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/12/30/Chinese-rails-configuration/">Rails中文配置</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-12-30T00:00:00+08:00" pubdate data-updated="true">Dec 30<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>rails默认为英文，像一些model的验证提示都是英文。
+按下面方法将其汉化</p>
+
+<p>首先，在<a href="https://github.com/svenfuchs/rails-i18n/tree/master/rails/locale">https://github.com/svenfuchs/rails-i18n/tree/master/rails/locale</a>下载相应的语言包</p>
+
+<p>中文选择 zh-CN.yml   ,将其下载到config/locale下面</p>
+
+<p>然后在config/application.rb里加入下面的配置</p>
+
+<div>
+  <pre><code class='bash'>config.i18n.default_locale = :&#39;zh-CN&#39;</code></pre>
+</div>
+
+
+<p>这句话的意思是将rails的语言包默认为简体中文</p>
+
+<p>然后重启服务器即可</p>
+
+<p>效果</p>
+
+<div>
+  <pre><code class='bash'>ruby-1.8.7-p302 &gt; I18n.l Time.now
+ =&gt; &quot;2010年12月30日 星期四 10:11:21 CST&quot;</code></pre>
+</div>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/3/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/10/25/start-new-blog/">Start New Blog</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/06/27/setup-rails-generator-orm/">设置rails中generator使用的orm类型</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/06/23/carriewave-support-for-rails-admin/">增加carrierwave对rails_admin的支持</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/05/26/rails31rc1-execjs-error/">rails3.1rc1在服务器上运行报Could Not Find a JavaScript Runtime错误的解决方法</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/05/26/rails-footnotes/">Rails调试插件rails-footnotes使用说明</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - ZoOL -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

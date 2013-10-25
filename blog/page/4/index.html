@@ -1,0 +1,1014 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>ZoOL => Blog</title>
+  <meta name="author" content="ZoOL">
+
+  
+  <meta name="description" content="github地址 在开发中，有时会碰到N + 1查询问题。 比如说，在本Blog显示文章时， 文章的作者是由关联查询得出 #home_controller
+@posts = Post.paginate :page =&gt; params[:page], :order =&gt; &#39; &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://zool.me/blog/page/4">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="ZoOL => Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">ZoOL => Blog</a></h1>
+  
+    <h2>Something for share</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:zool.me" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/categories/rails/">Rails</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/12/18/Bullet-to-deal-with-the-development-of-the-N-1-rails-Asked-Questions/">使用bullet来处理rails开发中的N + 1查询问题</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-12-18T00:00:00+08:00" pubdate data-updated="true">Dec 18<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="https://github.com/flyerhzm/bullet">github地址</a></p>
+
+<p>在开发中，有时会碰到N + 1查询问题。</p>
+
+<p>比如说，在本Blog显示文章时， 文章的作者是由关联查询得出</p>
+
+<div>
+  <pre><code class='ruby'>#home_controller
+@posts = Post.paginate :page =&gt; params[:page], :order =&gt; &#39;created_at DESC&#39;
+
+#views
+@posts.each do |post|
+..............
+post.user.username
+............</code></pre>
+</div>
+
+
+<p>这样，每一篇文章都会有一个查询，怎么来改进代码呢？</p>
+
+<p>首先，先安装bullet</p>
+
+<div>
+  <pre><code class='ruby'>group :development do
+ gem &#39;bullet&#39;
+end</code></pre>
+</div>
+
+
+<p>然后在config/environments/development.rb加入下面代码</p>
+
+<div>
+  <pre><code class='ruby'>Bullet.enable = true
+  Bullet.alert = true
+  Bullet.bullet_logger = true
+  Bullet.console = true
+  Bullet.growl = false
+  Bullet.rails_logger = true
+  Bullet.disable_browser_cache = true</code></pre>
+</div>
+
+
+<p>重启服务器</p>
+
+<p>之后重新访问页面时就会弹出页面来提示你，当前页面有N+1问题，可以用:include => [:user]来解决</p>
+
+<p>重新编辑home_controller</p>
+
+<div>
+  <pre><code class='ruby'>@posts = Post.paginate :page =&gt; params[:page], :order =&gt; &#39;created_at DESC&#39;, :include =&gt; [:user]</code></pre>
+</div>
+
+
+<p>问题解决</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/12/18/Annotate-the-rails-using-the-model-generated-the-outline-of-the-project/">使用Annotate为rails项目生成model的大纲</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-12-18T00:00:00+08:00" pubdate data-updated="true">Dec 18<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="https://github.com/ctran/annotate_models">github地址</a></p>
+
+<p>有时候在写代码时，想不起来当前model的字段属性了，annotate帮你忙。</p>
+
+<p>annotate可以以注释的方式在你model文件的底部生成model的大纲(schema)信息</p>
+
+<h1>安装</h1>
+
+<div>
+  <pre><code class='bash'>gem install annotate</code></pre>
+</div>
+
+
+<h1>生成</h1>
+
+<div>
+  <pre><code class='bash'>cd /path/to/app/
+annotate</code></pre>
+</div>
+
+
+<p>便会生成下面的注释</p>
+
+<div>
+  <pre><code class='bash'># == Schema Information
+#
+# Table name: users
+#
+#  id                   :integer(4)      not null, primary key
+#  email                :string(255)     default(&quot;&quot;), not null
+#  encrypted_password   :string(128)     default(&quot;&quot;), not null
+#  username             :string(255)     not null
+#  reset_password_token :string(255)
+#  remember_created_at  :datetime
+#  sign_in_count        :integer(4)      default(0)
+#  current_sign_in_at   :datetime
+#  last_sign_in_at      :datetime
+#  current_sign_in_ip   :string(255)
+#  last_sign_in_ip      :string(255)
+#  password_salt        :string(255)</code></pre>
+</div>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/12/17/ubuntu-install-Postgresql/">ubuntu安装Postgresql</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-12-17T00:00:00+08:00" pubdate data-updated="true">Dec 17<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1>安装</h1>
+
+<div>
+  <pre><code class='bash'>sudo apt-get install postgresql</code></pre>
+</div>
+
+
+<p>输入密码，确认。下载安装完毕之后会创建一个postgres用户，默认密码为空。</p>
+
+<h1>配置</h1>
+
+<p>修改postgres用户密码</p>
+
+<div>
+  <pre><code class='bash'>sudo passwd postgres</code></pre>
+</div>
+
+
+<p>切换到postgres用户</p>
+
+<div>
+  <pre><code class='bash'>sudo su postgres</code></pre>
+</div>
+
+
+<p>登录到postgres数据库</p>
+
+<div>
+  <pre><code class='bash'>psql postgres</code></pre>
+</div>
+
+
+<p>会看到一下文字</p>
+
+<div>
+  <pre><code class='bash'>psql (8.4.5)
+    Type &quot;help&quot; for help.
+
+    postgres=#</code></pre>
+</div>
+
+
+<p>然后输入下面的命令,password为你要设置的密码</p>
+
+<div>
+  <pre><code class='bash'>ALTER USER postgres with PASSWORD &#39;password&#39;</code></pre>
+</div>
+
+
+<p>输入\q返回到终端</p>
+
+<h1>创建用户和数据库</h1>
+
+<p>输入</p>
+
+<div>
+  <pre><code class='bash'>createuser -drSP blog  #创建一个blog用户，但不是超级管理员
+
+    createdb -O blog blogdb  #创建一个属于blog用户的blogdb数据库</code></pre>
+</div>
+
+
+<h1>安装pgadmin</h1>
+
+<p>输入</p>
+
+<div>
+  <pre><code class='bash'>sudo apt-get install pgadmin3</code></pre>
+</div>
+
+
+<p>安装完毕，运行</p>
+
+<div>
+  <pre><code class='bash'>pgadmin3</code></pre>
+</div>
+
+
+<h1>设置其他网络连接数据库</h1>
+
+<p>修改/etc/postgresql/8.4/main/pg_hba.conf:</p>
+
+<div>
+  <pre><code class='bash'># Database administrative login by UNIX sockets
+    # local   all         postgres                          ident
+
+    # TYPE  DATABASE    USER        CIDR-ADDRESS          METHOD
+
+    # &quot;local&quot; is for Unix domain socket connections only
+    local   all         all                               md5 #ident
+    # IPv4 local connections: 
+    host    all         all         127.0.0.1/32          md5
+    # IPv6 local connections:
+    host    all         all         ::1/128               md5</code></pre>
+</div>
+
+
+<p>修改/etc/postgresql/8.4/main/postgresql.conf,</p>
+
+<div>
+  <pre><code class='bash'>listen_address = &#39;*&#39; #允许其他机器访问</code></pre>
+</div>
+
+
+<p>重启数据库</p>
+
+<div>
+  <pre><code class='bash'>sudo /etc/init.d/postgresql-8.4 restart</code></pre>
+</div>
+
+
+<p>安装完成</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/12/17/ubuntu-error-under-the-mysql-character-set/">Ubuntu下mysql字符集设置错误</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-12-17T00:00:00+08:00" pubdate data-updated="true">Dec 17<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>原来在rhel下设置了</p>
+
+<div>
+  <pre><code class='bash'>character-set-server = utf8</code></pre>
+</div>
+
+
+<p>但在ubuntu下不起作用，报错:</p>
+
+<div>
+  <pre><code class='bash'>mysql: unknown variable &#39;character-set-server=utf8&#39;</code></pre>
+</div>
+
+
+<p>换为以下设置解决问题:</p>
+
+<div>
+  <pre><code class='bash'>default-character-set = utf8</code></pre>
+</div>
+
+
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/12/17/ruby-array-of-fill-method/">Ruby数组填充方法</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-12-17T00:00:00+08:00" pubdate data-updated="true">Dec 17<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>手册</p>
+
+<div>
+  <pre><code class='ruby'>array.fill(obj) → array
+array.fill(obj, start [, length]) → array
+array.fill(obj, range ) → array
+array.fill {|index| block } → array
+array.fill(start [, length] ) {|index| block } → array
+array.fill(range) {|index| block } → array</code></pre>
+</div>
+
+
+<p>前三个方法都是将obj填充到array里， start 默认为0, length默认为self.length长度</p>
+
+<p>后三个方法是将block里的返回值填充到array里。block接收到的是array的元素index值。</p>
+
+<p>实例代码</p>
+
+<div>
+  <pre><code class='ruby'>a = [ &quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot; ]
+
+a.fill(&quot;x&quot;)              #=&gt; [&quot;x&quot;, &quot;x&quot;, &quot;x&quot;, &quot;x&quot;]
+#将数组里所有元素替换为&quot;x&quot;
+
+a.fill(&quot;z&quot;, 2, 2)        #=&gt; [&quot;x&quot;, &quot;x&quot;, &quot;z&quot;, &quot;z&quot;]
+#从数组第[2]位元素开始，替换 2 次 &quot;z&quot;
+
+a.fill(&quot;y&quot;, 0..1)        #=&gt; [&quot;y&quot;, &quot;y&quot;, &quot;z&quot;, &quot;z&quot;]
+#将数组[0]到[1]位的元素替换为&quot;y&quot;
+
+a.fill {|i| i*i}         #=&gt; [0, 1, 4, 9]
+#提供block方法, i为数组下标
+
+a.fill(-2) {|i| i*i*i}   #=&gt; [&#39;a&#39;, &#39;b&#39;, 8, 27]
+#从数组第[-2]位开始运行block
+#注意，ruby源码里的注释是错的
+#a.fill(-2) {|i| i*i*i}   #=&gt; [0, 1, 8, 27]
+    
+#实际应用， 我要生成一个数字从1到50的数组
+
+ &gt;&gt;  Array.new(50).fill {|i| i+=1 }
+=&gt; [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50]</code></pre>
+</div>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/12/17/rails-Something-about-why-rails-have-a-forty_two-in-Array-method/">rails趣谈&#8217;为什么rails在Array中有个forty_two方法&#8217;</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-12-17T00:00:00+08:00" pubdate data-updated="true">Dec 17<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>有次，群里有人问，为什么在rails的Array中有个forty_two方法</p>
+
+<p>先看代码</p>
+
+<div>
+  <pre><code class='ruby'>&gt; irb
+&gt;&gt; require &#39;activesupport&#39;
+=&gt; true
+&gt;&gt; a = Array.new(50).fill {|i| i+=1 }
+=&gt; [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50]
+&gt;&gt; a.forty_two
+=&gt; 42</code></pre>
+</div>
+
+
+<p>经过网上一番探索，在这个网页得到了答案 <a href="http://www.kerrybuckley.org/2008/11/24/my-very-small-part-in-the-arrayforty_two-controversy/">网址</a></p>
+
+<p>在rails2.2时代， 有些人扩展了Array方法，从Array#second写到了Array#tenth。</p>
+
+<p>这太混乱了，于是DHH发话，只保留 second, third, fourth and fifth 但增加一个forty_two， 为什么呢？</p>
+
+<p>因为这是 <a href="http://zh.wikipedia.org/zh-cn/%E7%94%9F%E5%91%BD%E3%80%81%E5%AE%87%E5%AE%99%E4%BB%A5%E5%8F%8A%E4%BB%BB%E4%BD%95%E4%BA%8B%E6%83%85%E7%9A%84%E7%B5%82%E6%A5%B5%E7%AD%94%E6%A1%88">生命、宇宙以及任何事情的终极答案</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/12/17/open-ssh-without-password/">开启ssh无密码登录</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-12-17T00:00:00+08:00" pubdate data-updated="true">Dec 17<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>首先生成公钥</p>
+
+<div>
+  <pre><code class='bash'>ssh-keygen -t rsa</code></pre>
+</div>
+
+
+<p>一路回车，会在~/.ssh目录下生成公钥和私钥.</p>
+
+<p>将公钥复制到需要登录的服务器</p>
+
+<div>
+  <pre><code class='bash'>ssh-copy-id user@host</code></pre>
+</div>
+
+
+<p>OK，完成了设置。</p>
+
+<p>P.S. 如果服务器没有开启公钥登录，请编辑 /etc/ssh/sshd_config, 确保</p>
+
+<div>
+  <pre><code class='bash'>PubkeyAuthentication yes</code></pre>
+</div>
+
+
+<p>并重启ssh服务</p>
+
+<div>
+  <pre><code class='bash'>sudo /etc/init.d/ssh restart</code></pre>
+</div>
+
+
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/12/17/new-rails-project-parameters/">新建rails项目的参数设置</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-12-17T00:00:00+08:00" pubdate data-updated="true">Dec 17<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1>实例</h1>
+
+<div>
+  <pre><code class='bash'>rails new newapp -d=mysql -T -J
+
+    rails new newapp -d=postgresql -b=https://gist.github.com/611035</code></pre>
+</div>
+
+
+<h1>参数</h1>
+
+<pre><code>rails new APP_PATH [options]
+</code></pre>
+
+<h2>APP_PATH</h2>
+
+<p>/path/to/appname， 不管前面是多复杂的路径，最后的appname就是新建的项目的名称</p>
+
+<div>
+  <pre><code class='bash'>rails new ~/Desktop/newapp  #在桌面目录上新建一个newapp目录，项目名叫newapp</code></pre>
+</div>
+
+
+<h2>options</h2>
+
+<div>
+  <pre><code class='bash'>-m, [--template=TEMPLATE]</code></pre>
+</div>
+
+
+<p>用模板文件来创建项目,模板文件可以是本机文件，也可以是一个url地址</p>
+
+<p>在使用模板文件创建项目时，可以按照模板文件的配置要求，生成对应的文件/目录</p>
+
+<div>
+  <pre><code class='bash'>[--skip-gemfile]</code></pre>
+</div>
+
+
+<p>不创建Gemfile文件</p>
+
+<div>
+  <pre><code class='bash'>[--dev]</code></pre>
+</div>
+
+
+<p>开发调试用，将项目的rails指向本地gem里的rails路径.</p>
+
+<div>
+  <pre><code class='bash'>-d, [--database=DATABASE]</code></pre>
+</div>
+
+
+<p>选择数据库，有mysql/oracle/postgresql/sqlite3/frontbase/ibm_db几种选择,默认是sqlite3</p>
+
+<div>
+  <pre><code class='bash'>-O, [--skip-active-record]</code></pre>
+</div>
+
+
+<p>不使用active-record</p>
+
+<div>
+  <pre><code class='bash'>-J, [--skip-prototype]</code></pre>
+</div>
+
+
+<p>不使用prototype</p>
+
+<div>
+  <pre><code class='bash'>-T, [--skip-test-unit]</code></pre>
+</div>
+
+
+<p>不使用prototype</p>
+
+<div>
+  <pre><code class='bash'>-G, [--skip-git]</code></pre>
+</div>
+
+
+<p>不创建.gitnore和.keeps</p>
+
+<div>
+  <pre><code class='bash'>-b, [--builder=BUILDER]</code></pre>
+</div>
+
+
+<p>用模板文件来创建项目,模板文件可以是本机文件，也可以是一个url地址</p>
+
+<p>在使用模板文件创建项目时，可以按照模板文件的配置要求，生成对应的文件/目录</p>
+
+<div>
+  <pre><code class='bash'>-r, [--ruby=PATH]</code></pre>
+</div>
+
+
+<p>设置运行项目的ruby路径，默认是当前环境下的ruby路径</p>
+
+<div>
+  <pre><code class='bash'>[--edge]</code></pre>
+</div>
+
+
+<p>从github更新最新的rails版本来运行项目</p>
+
+<h2>其他选项</h2>
+
+<div>
+  <pre><code class='bash'>Runtime options:
+
+    -p, [--pretend]  # 运行脚本时不生成文件
+
+    -q, [--quiet]    # 运行脚本时不输出信息
+    -s, [--skip]     # 跳过已经存在的文件
+    -f, [--force]    # 覆盖已经存在的文件
+
+Rails options:
+    -h, [--help]     # 显示帮助
+    -v, [--version]  # 显示Rails版本号</code></pre>
+</div>
+
+
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/12/17/gitignore-template-library/">Gitignore模板库</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-12-17T00:00:00+08:00" pubdate data-updated="true">Dec 17<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="https://github.com/github/gitignore">github地址</a></p>
+
+<p>rails3项目新建时，会在项目根目录下生成.gitignore文件，这个文件是用来忽略那些不需要提交的文件。</p>
+
+<p>你可以直接将项目里的Rails.gitignore里面的内容替换原来项目里的gitignore</p>
+
+<p>这个模板库里还有其他许多模板，你可以在git global里加载，不用每个项目去修改了。</p>
+
+<div>
+  <pre><code class='bash'>git config --global core.excludesfile ~/.global_ignore</code></pre>
+</div>
+
+
+<p>可以通过git config看到设置起效</p>
+
+<div>
+  <pre><code class='bash'>git config --list</code></pre>
+</div>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/12/17/gem-install-pg-error-under-ubuntu/">Ubuntu下gem安装pg出错</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-12-17T00:00:00+08:00" pubdate data-updated="true">Dec 17<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>在安装pg时，系统报了如下的错误</p>
+
+<div>
+  <pre><code class='bash'>/home/zool/.rvm/rubies/ruby-1.8.7-p302/bin/ruby extconf.rb 
+    checking for pg_config... no
+    checking for libpq-fe.h... no
+    Can&#39;t find the &#39;libpq-fe.h header
+    *** extconf.rb failed ***
+    Could not create Makefile due to some reason, probably lack of
+    necessary libraries and/or headers.  Check the mkmf.log file for more
+    details.  You may need configuration options.
+
+    Provided configuration options:
+        --with-opt-dir
+    --without-opt-dir
+    --with-opt-include
+    --without-opt-include=${opt-dir}/include
+    --with-opt-lib
+    --without-opt-lib=${opt-dir}/lib
+    --with-make-prog
+    --without-make-prog
+    --srcdir=.
+    --curdir
+    --ruby=/home/zool/.rvm/rubies/ruby-1.8.7-p302/bin/ruby
+    --with-pg
+    --without-pg
+    --with-pg-config
+    --without-pg-config
+    --with-pg-dir
+    --without-pg-dir
+    --with-pg-include
+    --without-pg-include=${pg-dir}/include
+    --with-pg-lib
+    --without-pg-lib=${pg-dir}/lib</code></pre>
+</div>
+
+
+<p>请教GOOGLE大神后，找到如下解决方案</p>
+
+<div>
+  <pre><code class='bash'>sudo apt-get install libpq-dev libpq5</code></pre>
+</div>
+
+
+<p>安装更新后解决问题</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/5/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/3/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/10/25/start-new-blog/">Start New Blog</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/06/27/setup-rails-generator-orm/">设置rails中generator使用的orm类型</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/06/23/carriewave-support-for-rails-admin/">增加carrierwave对rails_admin的支持</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/05/26/rails31rc1-execjs-error/">rails3.1rc1在服务器上运行报Could Not Find a JavaScript Runtime错误的解决方法</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/05/26/rails-footnotes/">Rails调试插件rails-footnotes使用说明</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - ZoOL -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

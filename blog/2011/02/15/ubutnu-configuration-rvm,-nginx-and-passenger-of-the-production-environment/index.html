@@ -1,0 +1,332 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>ubutnu配置rvm,nginx和passenger的生产环境 - ZoOL => Blog</title>
+  <meta name="author" content="ZoOL">
+
+  
+  <meta name="description" content="下述内容参考了A Guide to a Nginx, Passenger and RVM Server 首先， 使用 root 帐号登录， 安装git和curl apt-get install curl git-core 使用脚本安装rvm bash &lt; &lt;(curl -L http &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://zool.me/blog/2011/02/15/ubutnu-configuration-rvm%2C-nginx-and-passenger-of-the-production-environment">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="ZoOL => Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">ZoOL => Blog</a></h1>
+  
+    <h2>Something for share</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:zool.me" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/categories/rails/">Rails</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Ubutnu配置rvm,nginx和passenger的生产环境</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-02-15T00:00:00+08:00" pubdate data-updated="true">Feb 15<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>下述内容参考了<a href="http://blog.ninjahideout.com/posts/a-guide-to-a-nginx-passenger-and-rvm-server">A Guide to a Nginx, Passenger and RVM Server</a></p>
+
+<p>首先， 使用 root 帐号登录，</p>
+
+<p>安装git和curl</p>
+
+<div>
+  <pre><code class='bash'>apt-get install curl git-core</code></pre>
+</div>
+
+
+<p>使用脚本安装rvm</p>
+
+<div>
+  <pre><code class='bash'>bash &lt; &lt;(curl -L http://bit.ly/rvm-install-system-wide)</code></pre>
+</div>
+
+
+<p>脚本会自动创建一个rvm组，并将root用户加入</p>
+
+<p>编辑 /root/.bashrc和/etc/skel/.bashrc
+将</p>
+
+<div>
+  <pre><code class='bash'>[ -z &quot;$PS!&quot;]  &amp;&amp; return</code></pre>
+</div>
+
+
+<p>替换为</p>
+
+<div>
+  <pre><code class='bash'>if [[ -n &quot;$PS1&quot; ]]; then</code></pre>
+</div>
+
+
+<p>在文件最后加入</p>
+
+<div>
+  <pre><code class='bash'>fi
+if groups | grep -q rvm ; then
+  source &quot;/usr/local/lib/rvm&quot;
+fi</code></pre>
+</div>
+
+
+<p>配置用户</p>
+
+<div>
+  <pre><code class='bash'>#增加zool用户
+adduser zool
+#将zool加入rvm组
+adduser zool rvm</code></pre>
+</div>
+
+
+<p>登录zool用户并测试</p>
+
+<div>
+  <pre><code class='bash'>type rvm | head -n1</code></pre>
+</div>
+
+
+<p>如果显示 rvm is a function 则表示安装正确</p>
+
+<p>安装ree依赖组件</p>
+
+<div>
+  <pre><code class='bash'>aptitude install build-essential bison openssl libreadline5 libreadline-dev \
+curl git-core zlib1g zlib1g-dev libssl-dev vim libsqlite3-0 libsqlite3-dev \
+sqlite3 libreadline-dev libxml2-dev git-core subversion autoconf</code></pre>
+</div>
+
+
+<p>安装ree</p>
+
+<div>
+  <pre><code class='bash'>rvm install ree</code></pre>
+</div>
+
+
+<p>设为默认环境</p>
+
+<div>
+  <pre><code class='bash'>rvm use ree --default</code></pre>
+</div>
+
+
+<p>安装passenger和nginx</p>
+
+<div>
+  <pre><code class='bash'>gem install passenger
+rvmsudo passenger-install-nginx-module</code></pre>
+</div>
+
+
+<p>配置nginx里的ruby环境</p>
+
+<div>
+  <pre><code class='bash'>passenger_root /usr/local/rvm/gems/ree-1.8.7-2010.02/gems/passenger-3.0.0;
+    passenger_ruby /usr/local/rvm/wrappers/ree-1.8.7-2010.02/ruby;</code></pre>
+</div>
+
+
+<p>设置nginx开机脚本</p>
+
+<div>
+  <pre><code class='bash'>curl -L http://bit.ly/nginx-ubuntu-init-file &gt; /etc/init.d/nginx
+chmod +x /etc/init.d/nginx
+update-rc.d nginx defaults
+/etc/init.d/nginx start</code></pre>
+</div>
+
+
+<p>原文中后面的step6,7关于Capistrano的环境配置以后再另文详述</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">ZoOL</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-02-15T00:00:00+08:00" pubdate data-updated="true">Feb 15<span>th</span>, 2011</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/rails/'>rails</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://zool.me/blog/2011/02/15/ubutnu-configuration-rvm%2C-nginx-and-passenger-of-the-production-environment/" data-via="" data-counturl="http://zool.me/blog/2011/02/15/ubutnu-configuration-rvm%2C-nginx-and-passenger-of-the-production-environment/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2011/02/09/rails3-new-project-template/" title="Previous Post: rails3新建项目模板">&laquo; rails3新建项目模板</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2011/02/22/Application-to-establish-sproutcore/" title="Next Post: 建立sproutcore应用">建立sproutcore应用 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/10/25/start-new-blog/">Start New Blog</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/06/27/setup-rails-generator-orm/">设置rails中generator使用的orm类型</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/06/23/carriewave-support-for-rails-admin/">增加carrierwave对rails_admin的支持</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/05/26/rails31rc1-execjs-error/">rails3.1rc1在服务器上运行报Could Not Find a JavaScript Runtime错误的解决方法</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/05/26/rails-footnotes/">Rails调试插件rails-footnotes使用说明</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - ZoOL -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

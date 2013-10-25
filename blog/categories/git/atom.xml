@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: git | ZoOL => Blog]]></title>
+  <link href="http://zool.me/blog/categories/git/atom.xml" rel="self"/>
+  <link href="http://zool.me/"/>
+  <updated>2013-10-25T11:49:24+08:00</updated>
+  <id>http://zool.me/</id>
+  <author>
+    <name><![CDATA[ZoOL]]></name>
+    <email><![CDATA[zhooul@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[gitignore模板库]]></title>
+    <link href="http://zool.me/blog/2010/12/17/gitignore-template-library/"/>
+    <updated>2010-12-17T00:00:00+08:00</updated>
+    <id>http://zool.me/blog/2010/12/17/gitignore-template-library</id>
+    <content type="html"><![CDATA[<p><a href="https://github.com/github/gitignore">github地址</a></p>
+
+<p>rails3项目新建时，会在项目根目录下生成.gitignore文件，这个文件是用来忽略那些不需要提交的文件。</p>
+
+<p>你可以直接将项目里的Rails.gitignore里面的内容替换原来项目里的gitignore</p>
+
+<p>这个模板库里还有其他许多模板，你可以在git global里加载，不用每个项目去修改了。
+<div>
+  <pre><code class='bash'>&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git config --global core.excludesfile ~/.global_ignore
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+
+可以通过git config看到设置起效
+<div>
+  <pre><code class='bash'>&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git config --list
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[应用gitflow建立代码开发标准化流程]]></title>
+    <link href="http://zool.me/blog/2010/12/17/Code-development-application-to-establish-standardized-processes-gitflow/"/>
+    <updated>2010-12-17T00:00:00+08:00</updated>
+    <id>http://zool.me/blog/2010/12/17/Code-development-application-to-establish-standardized-processes-gitflow</id>
+    <content type="html"><![CDATA[<p><a href="https://github.com/nvie/gitflow">github地址</a></p>
+
+<p>简单的来说就是几步</p>
+
+<p>1.安装
+<div>
+  <pre><code class='bash'>&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;wget -q -O - http://github.com/nvie/gitflow/raw/develop/contrib/gitflow-installer.sh | sh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+</p>
+
+<pre><code>我在安装的时候从github下载文件时报证书错误，加了参数忽略错误后才成功
+</code></pre>
+
+<p><div>
+  <pre><code class='bash'>&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;wget -q -O - --no-check-certificate https://github.com/nvie/gitflow/raw/develop/contrib/gitflow-installer.sh | sudo sh
+
+sudo apt-get install opt
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+
+2.初始化
+<div>
+  <pre><code class='bash'>git flow init</code></pre>
+</div>
+</p>
+
+<p>3.开发流程,就像文章里说的
+<div>
+  <pre><code class='bash'>&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;开发新特征&lt;/p&gt;
+
+&lt;p&gt;git flow feature start &lt;name&gt; [&lt;base&gt;]
+git flow feature finish &lt;name&gt;
+列出新特征分支
+git flow feature
+准备发布版本&lt;/p&gt;
+
+&lt;p&gt;git flow release start &lt;name&gt; [&lt;base&gt;]
+git flow release finish &lt;name&gt;
+列出发布分支
+git flow release
+&amp;lt; base &gt;是位于develop分支的commit&lt;/p&gt;
+
+&lt;p&gt;修正紧急Bug&lt;/p&gt;
+
+&lt;p&gt;git flow hotfix start &lt;name&gt; [&lt;base&gt;]
+git flow hotfix finish &lt;name&gt;
+列出修正分支
+git flow hotfix
+支援其他成员工作&lt;/p&gt;
+
+&lt;p&gt;git flow support start &lt;name&gt; &lt;base&gt;
+没有finish?(待实践)
+列出支援分支
+git flow support
+&amp;lt; base &gt;是位于master分支的commit</code></pre>
+</div>
+</p></blockquote>
+]]></content>
+  </entry>
+  
+</feed>

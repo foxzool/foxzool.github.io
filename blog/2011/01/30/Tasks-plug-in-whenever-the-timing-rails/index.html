@@ -1,0 +1,302 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>rails的定时任务插件whenever - ZoOL => Blog</title>
+  <meta name="author" content="ZoOL">
+
+  
+  <meta name="description" content="在做web应用时，有时会需要定时做一些操作，如发邮件，统计信息等。
+这些都是需要放在后台来执行, whenever就是这样的一个插件，使用ruby强大的DSL， 高效的配置生成定时任务。
+注意，whenever使用的是crontab定时器，所以这个gem在windows上无效。 github地址 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://zool.me/blog/2011/01/30/Tasks-plug-in-whenever-the-timing-rails">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="ZoOL => Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">ZoOL => Blog</a></h1>
+  
+    <h2>Something for share</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:zool.me" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/categories/rails/">Rails</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Rails的定时任务插件whenever</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-01-30T00:00:00+08:00" pubdate data-updated="true">Jan 30<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>在做web应用时，有时会需要定时做一些操作，如发邮件，统计信息等。
+这些都是需要放在后台来执行, whenever就是这样的一个插件，使用ruby强大的DSL， 高效的配置生成定时任务。
+注意，whenever使用的是crontab定时器，所以这个gem在windows上无效。</p>
+
+<p><a href="https://github.com/javan/whenever">github地址</a></p>
+
+<h1>安装</h1>
+
+<div>
+  <pre><code class='bash'>gem &#39;whenever&#39;, :require =&gt; false</code></pre>
+</div>
+
+
+<h1>开始配置</h1>
+
+<div>
+  <pre><code class='bash'>cd /path/to/myapp/
+wheneverize .
+#会在config目录下生成一个schedule.rb文件</code></pre>
+</div>
+
+
+<h1>配置文件说明</h1>
+
+<p>每个配置都是在一个叫every的block里面配置
+运行频率 .minutes, .hours, .days, .months
+可以运行任务 runner rake command 三种</p>
+
+<h1>例子</h1>
+
+<div>
+  <pre><code class='bash'>#每隔10分钟运行一次
+every 10.minutes do
+  #等同于 rails runner MyModel.some_process
+  runner &quot;MyModel.some_process&quot;
+  #等同于 rake my:rake:task
+  rake &quot;my:rake:task&quot;  
+  #等同于在终端执行 /usr/bin/my_great_command
+  command &quot;/usr/bin/my_great_command&quot; 
+end</code></pre>
+</div>
+
+
+<p>whenever默认使用production环境，可以在配置文件里另外定义</p>
+
+<div>
+  <pre><code class='bash'>set :environment, :autotest
+  #或单独指定
+  runner &quot;MyModel.some_process&quot;, :environment =&gt; :autotest</code></pre>
+</div>
+
+
+<h1>高级配置</h1>
+
+<h1>使用at参数来指定分钟</h1>
+
+<div>
+  <pre><code class='bash'>#每隔两个小时23分钟
+every 2.hours, :at =&gt; 23 do
+#每隔两天在上午4:30
+every 2.days, :at =&gt; &#39;4:30am&#39; do
+#每周五晚从05:00到23:45每隔15分钟
+every :friday, :at =&gt; (&#39;05&#39;..&#39;23&#39;).to_a.collect {|x| [&quot;#{x}:00&quot;,&quot;#{x}:15&quot;,&quot;#{x}:30&quot;,&quot;#{x}:45&quot;]}.flatten do</code></pre>
+</div>
+
+
+<h1>与Capistrano结合</h1>
+
+<p>编辑Capistrano的配置文件config/deploy.rb, 加入</p>
+
+<div>
+  <pre><code class='bash'>require &quot;whenever/capistrano&quot;
+...
+after &quot;deploy:symlink&quot;, &quot;deploy:update_crontab&quot;
+  namespace :deploy do
+    desc &quot;Update the crontab file&quot;
+    task :update_crontab, :roles =&gt; :db do
+      run &quot;cd #{release_path} &amp;&amp; whenever --update-crontab #{application}&quot;
+    end
+  end</code></pre>
+</div>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">ZoOL</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-01-30T00:00:00+08:00" pubdate data-updated="true">Jan 30<span>th</span>, 2011</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/rails/'>rails</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://zool.me/blog/2011/01/30/Tasks-plug-in-whenever-the-timing-rails/" data-via="" data-counturl="http://zool.me/blog/2011/01/30/Tasks-plug-in-whenever-the-timing-rails/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2011/01/29/rails-in-the-method-of-operation-of-time/" title="Previous Post: rails中对时间的操作方法">&laquo; rails中对时间的操作方法</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2011/02/02/Set-p3p-header-rails/" title="Next Post: rails中设置p3p头">rails中设置p3p头 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/10/25/start-new-blog/">Start New Blog</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/06/27/setup-rails-generator-orm/">设置rails中generator使用的orm类型</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/06/23/carriewave-support-for-rails-admin/">增加carrierwave对rails_admin的支持</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/05/26/rails31rc1-execjs-error/">rails3.1rc1在服务器上运行报Could Not Find a JavaScript Runtime错误的解决方法</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/05/26/rails-footnotes/">Rails调试插件rails-footnotes使用说明</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - ZoOL -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,342 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>新建rails项目的参数设置 - ZoOL => Blog</title>
+  <meta name="author" content="ZoOL">
+
+  
+  <meta name="description" content="实例 rails new newapp -d=mysql -T -J rails new newapp -d=postgresql -b=https://gist.github.com/611035 参数 rails new APP_PATH [options] APP_PATH /path/to &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://zool.me/blog/2010/12/17/new-rails-project-parameters">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="ZoOL => Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">ZoOL => Blog</a></h1>
+  
+    <h2>Something for share</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:zool.me" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/categories/rails/">Rails</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">新建rails项目的参数设置</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-12-17T00:00:00+08:00" pubdate data-updated="true">Dec 17<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h1>实例</h1>
+
+<div>
+  <pre><code class='bash'>rails new newapp -d=mysql -T -J
+
+    rails new newapp -d=postgresql -b=https://gist.github.com/611035</code></pre>
+</div>
+
+
+<h1>参数</h1>
+
+<pre><code>rails new APP_PATH [options]
+</code></pre>
+
+<h2>APP_PATH</h2>
+
+<p>/path/to/appname， 不管前面是多复杂的路径，最后的appname就是新建的项目的名称</p>
+
+<div>
+  <pre><code class='bash'>rails new ~/Desktop/newapp  #在桌面目录上新建一个newapp目录，项目名叫newapp</code></pre>
+</div>
+
+
+<h2>options</h2>
+
+<div>
+  <pre><code class='bash'>-m, [--template=TEMPLATE]</code></pre>
+</div>
+
+
+<p>用模板文件来创建项目,模板文件可以是本机文件，也可以是一个url地址</p>
+
+<p>在使用模板文件创建项目时，可以按照模板文件的配置要求，生成对应的文件/目录</p>
+
+<div>
+  <pre><code class='bash'>[--skip-gemfile]</code></pre>
+</div>
+
+
+<p>不创建Gemfile文件</p>
+
+<div>
+  <pre><code class='bash'>[--dev]</code></pre>
+</div>
+
+
+<p>开发调试用，将项目的rails指向本地gem里的rails路径.</p>
+
+<div>
+  <pre><code class='bash'>-d, [--database=DATABASE]</code></pre>
+</div>
+
+
+<p>选择数据库，有mysql/oracle/postgresql/sqlite3/frontbase/ibm_db几种选择,默认是sqlite3</p>
+
+<div>
+  <pre><code class='bash'>-O, [--skip-active-record]</code></pre>
+</div>
+
+
+<p>不使用active-record</p>
+
+<div>
+  <pre><code class='bash'>-J, [--skip-prototype]</code></pre>
+</div>
+
+
+<p>不使用prototype</p>
+
+<div>
+  <pre><code class='bash'>-T, [--skip-test-unit]</code></pre>
+</div>
+
+
+<p>不使用prototype</p>
+
+<div>
+  <pre><code class='bash'>-G, [--skip-git]</code></pre>
+</div>
+
+
+<p>不创建.gitnore和.keeps</p>
+
+<div>
+  <pre><code class='bash'>-b, [--builder=BUILDER]</code></pre>
+</div>
+
+
+<p>用模板文件来创建项目,模板文件可以是本机文件，也可以是一个url地址</p>
+
+<p>在使用模板文件创建项目时，可以按照模板文件的配置要求，生成对应的文件/目录</p>
+
+<div>
+  <pre><code class='bash'>-r, [--ruby=PATH]</code></pre>
+</div>
+
+
+<p>设置运行项目的ruby路径，默认是当前环境下的ruby路径</p>
+
+<div>
+  <pre><code class='bash'>[--edge]</code></pre>
+</div>
+
+
+<p>从github更新最新的rails版本来运行项目</p>
+
+<h2>其他选项</h2>
+
+<div>
+  <pre><code class='bash'>Runtime options:
+
+    -p, [--pretend]  # 运行脚本时不生成文件
+
+    -q, [--quiet]    # 运行脚本时不输出信息
+    -s, [--skip]     # 跳过已经存在的文件
+    -f, [--force]    # 覆盖已经存在的文件
+
+Rails options:
+    -h, [--help]     # 显示帮助
+    -v, [--version]  # 显示Rails版本号</code></pre>
+</div>
+
+
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">ZoOL</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-12-17T00:00:00+08:00" pubdate data-updated="true">Dec 17<span>th</span>, 2010</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/rails/'>rails</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://zool.me/blog/2010/12/17/new-rails-project-parameters/" data-via="" data-counturl="http://zool.me/blog/2010/12/17/new-rails-project-parameters/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2010/12/17/gitignore-template-library/" title="Previous Post: gitignore模板库">&laquo; gitignore模板库</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2010/12/17/open-ssh-without-password/" title="Next Post: 开启ssh无密码登录">开启ssh无密码登录 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/10/25/start-new-blog/">Start New Blog</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/06/27/setup-rails-generator-orm/">设置rails中generator使用的orm类型</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/06/23/carriewave-support-for-rails-admin/">增加carrierwave对rails_admin的支持</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/05/26/rails31rc1-execjs-error/">rails3.1rc1在服务器上运行报Could Not Find a JavaScript Runtime错误的解决方法</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/05/26/rails-footnotes/">Rails调试插件rails-footnotes使用说明</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - ZoOL -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

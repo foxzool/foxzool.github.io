@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: mysql | ZoOL => Blog]]></title>
+  <link href="http://zool.me/blog/categories/mysql/atom.xml" rel="self"/>
+  <link href="http://zool.me/"/>
+  <updated>2013-10-25T11:49:24+08:00</updated>
+  <id>http://zool.me/</id>
+  <author>
+    <name><![CDATA[ZoOL]]></name>
+    <email><![CDATA[zhooul@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[ubuntu下mysql字符集设置错误]]></title>
+    <link href="http://zool.me/blog/2010/12/17/ubuntu-error-under-the-mysql-character-set/"/>
+    <updated>2010-12-17T00:00:00+08:00</updated>
+    <id>http://zool.me/blog/2010/12/17/ubuntu-error-under-the-mysql-character-set</id>
+    <content type="html"><![CDATA[<p>原来在rhel下设置了
+<div>
+  <pre><code class='bash'>&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;character-set-server = utf8
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+
+但在ubuntu下不起作用，报错:
+<div>
+  <pre><code class='bash'>&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;mysql: unknown variable &#39;character-set-server=utf8&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+
+换为以下设置解决问题:
+<div>
+  <pre><code class='bash'>&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;default-character-set = utf8
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;</code></pre>
+</div>
+</p>
+]]></content>
+  </entry>
+  
+</feed>

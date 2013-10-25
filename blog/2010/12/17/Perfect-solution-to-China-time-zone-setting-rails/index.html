@@ -1,0 +1,272 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>完美解决rails中国时区时间设置 - ZoOL => Blog</title>
+  <meta name="author" content="ZoOL">
+
+  
+  <meta name="description" content="解释4个时区设置的不同 config.active_record.default_timezone
+config.time_zone
+Time.zone
+ENV[&lsquo;TZ&rsquo;] 分别解释如下: ENV[&lsquo;TZ&rsquo;] 这个变量指的是服务器系统变量， &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://zool.me/blog/2010/12/17/Perfect-solution-to-China-time-zone-setting-rails">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="ZoOL => Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">ZoOL => Blog</a></h1>
+  
+    <h2>Something for share</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:zool.me" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/categories/rails/">Rails</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">完美解决rails中国时区时间设置</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-12-17T00:00:00+08:00" pubdate data-updated="true">Dec 17<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>解释4个时区设置的不同</h2>
+
+<ul>
+<li><p>config.active_record.default_timezone</p></li>
+<li><p>config.time_zone</p></li>
+<li><p>Time.zone</p></li>
+<li><p>ENV[&lsquo;TZ&rsquo;]</p></li>
+</ul>
+
+
+<p>分别解释如下:</p>
+
+<ol>
+<li><p>ENV[&lsquo;TZ&rsquo;]</p>
+
+<p>这个变量指的是服务器系统变量，ubuntu下可以用cat /etc/timezone来查看</p>
+
+<p>当这个值为 Asia/Shanghai时， 显示就是中国时间。</p>
+
+<p>对于ruby/rails来说，这个值决定 Time.now的显示时间</p></li>
+<li><p>config.time_zone</p>
+
+<p>这个值是rails系统对显示时间的默认设置，可以通过 rake time:zones:all 列出所有可以设置的时区</p>
+
+<p>一般来说把这个设置为 &lsquo;Beijing&rsquo;</p></li>
+<li><p>Time.zone</p>
+
+<p>这个是设置最终处理显示的时区，可以覆盖config.time_zone,参数和config.time_zone一样</p>
+
+<p>可以参考 railscasts的这篇 <a href="http://railscasts.com/episodes/106-time-zones-in-rails-2-1">Time Zones in Rails 2.1</a></p></li>
+<li><p>config.active_record.default_timezone</p>
+
+<p><strong>这里就是全文的关键了！</strong></p>
+
+<p>这个default_timezone是决定active_record对数据库交互的时区设置，也就是影响created_at和updated_at在数据库的记录时间。</p>
+
+<p> 只有两个参数:utc和:local, rails初始化时默认是utc，所以保存到数据库的时间是utc时间。</p></li>
+</ol>
+
+
+<h2>总结</h2>
+
+<p>要在界面和数据库都很好的显示处理中国时区时间，编辑/path/to/site/config/application.rb(rails2是environment.rb), 加入</p>
+
+<div>
+  <pre><code class='ruby'>config.active_record.default_timezone = :local
+    config.time_zone = &#39;Beijing&#39;</code></pre>
+</div>
+
+
+<p>完美解决rails中国时区时间设置</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">ZoOL</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-12-17T00:00:00+08:00" pubdate data-updated="true">Dec 17<span>th</span>, 2010</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/rails/'>rails</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://zool.me/blog/2010/12/17/Perfect-solution-to-China-time-zone-setting-rails/" data-via="" data-counturl="http://zool.me/blog/2010/12/17/Perfect-solution-to-China-time-zone-setting-rails/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2010/12/17/Code-development-application-to-establish-standardized-processes-gitflow/" title="Previous Post: 应用gitflow建立代码开发标准化流程">&laquo; 应用gitflow建立代码开发标准化流程</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2010/12/17/Production-environment-rake-db%3A-migrate-error-database-is-not-configured/" title="Next Post: 生产环境下rake db:migrate报错database is not configured">生产环境下rake db:migrate报错database is not configured &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/10/25/start-new-blog/">Start New Blog</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/06/27/setup-rails-generator-orm/">设置rails中generator使用的orm类型</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/06/23/carriewave-support-for-rails-admin/">增加carrierwave对rails_admin的支持</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/05/26/rails31rc1-execjs-error/">rails3.1rc1在服务器上运行报Could Not Find a JavaScript Runtime错误的解决方法</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/05/26/rails-footnotes/">Rails调试插件rails-footnotes使用说明</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - ZoOL -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
