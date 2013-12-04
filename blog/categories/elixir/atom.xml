@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: elixir | ZoOL => Blog]]></title>
+  <link href="http://foxzool.github.io/blog/categories/elixir/atom.xml" rel="self"/>
+  <link href="http://foxzool.github.io/"/>
+  <updated>2013-12-04T17:07:53+08:00</updated>
+  <id>http://foxzool.github.io/</id>
+  <author>
+    <name><![CDATA[ZoOL]]></name>
+    <email><![CDATA[zhooul@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[start-elixir]]></title>
+    <link href="http://foxzool.github.io/blog/2013/11/04/start-elixir/"/>
+    <updated>2013-11-04T14:47:00+08:00</updated>
+    <id>http://foxzool.github.io/blog/2013/11/04/start-elixir</id>
+    <content type="html"><![CDATA[<h1>安装</h1>
+
+<p>在mac下直接用bundle安装</p>
+
+<p><code>
+bundle update
+bundle install elixir
+</code></p>
+
+<p>其他Linux发行版也可以通过对应的包管理器进行下载安装。</p>
+
+<h1>进入命令行操作模式</h1>
+
+<p>在终端下运行 <code>iex</code></p>
+
+<p>查看命令行帮助
+<code>iex(1)&gt; h()</code></p>
+
+<h2>常用计算</h2>
+
+<p><code>
+iex&gt; 1 + 1
+2
+iex&gt; 10 - 5
+5
+iex&gt; 10 / 2
+5.0
+</code>
+<code>/</code> 默认返回的是浮点数(float)。 如果要获取整数或余数，使用<code>div</code>和<code>rem</code>函数</p>
+
+<p><code>
+iex&gt; div(10, 2)
+5
+iex&gt; div 10, 2
+5
+iex&gt; rem 10, 3
+1
+</code>
+很多时候可以把函数调用外层的括号省略掉</p>
+
+<h2>基本类型</h2>
+
+<p><code>
+iex&gt; 1          # 整数
+iex&gt; 0x1F       # 整数
+iex&gt; 1.0        # 浮点数
+iex&gt; :atom      # 原子(可以理解为ruby里的symbol)
+iex&gt; {1,2,3}    # 元组
+iex&gt; [1,2,3]    # 列表
+iex&gt; &lt;&lt;1,2,3&gt;&gt;  # 二进制流
+</code></p>
+
+<p>获取元组/列表长度</p>
+
+<p>```
+iex> size { 1, 2, 3 }
+3</p>
+
+<p>iex> length [ 1, 2, 3 ]
+3
+```</p>
+
+<p>注意， 元组用size, 列表用length,  不然会出错。</p>
+
+<p>字符串原生支持UTF-8</p>
+
+<p><code>
+iex&gt; "hellö"
+"hellö"
+iex&gt; "你好"
+"你好"
+</code></p>
+
+<p>字符串支持插入(像ruby一样)
+<code>
+iex&gt; name = "world"
+iex&gt; "hello #{name}"
+"hello world"
+</code></p>
+
+<p>说到底， 字符串就是由bytes组装的, 中文算3个字节</p>
+
+<p><code>
+iex&gt; is_binary("hello")
+true
+iex&gt; byte_size("hello")
+5
+iex&gt; byte_size("你h好")
+7
+</code></p>
+
+<p>同样，字符串也是bytes组装的</p>
+
+<p><code>
+iex&gt; is_bitstring("hello")
+true
+iex&gt; bit_size("hello")
+40
+iex&gt; bit_size("你h好")
+56
+</code></p>
+
+<p>组装二进制串</p>
+
+<p><code>
+iex&gt; is_binary &lt;&lt;0, 0, 0&gt;&gt;
+true
+</code></p>
+
+<p>但单引号的字符串和双引号的字符串是不一样的，单引号的字符串是一个字符列表</p>
+
+<p><code>
+iex&gt; is_binary('hello')
+false
+iex&gt; is_list('hello')
+true
+</code></p>
+
+<p>elixir 的布尔值为<code>true</code>和<code>false</code>， 同时他们也是原子类型</p>
+
+<p><code>
+iex&gt; true
+true
+iex&gt; is_boolean false
+true
+iex&gt; is_atom(true)
+true
+</code></p>
+
+<p>elixir 通过<code>.</code>来调用匿名函数</p>
+
+<p>```</p>
+
+<h1>function</h1>
+
+<p>iex> x = fn(a, b) &ndash;> a + b end</p>
+
+<h1>Fun&lt;erl_eval.12.111823515></h1>
+
+<p>iex> x.(1, 2)
+3
+```</p>
+
+<h2>操作符</h2>
+
+<p>elixir 除了 <code>+, -, *, /</code>这4个基本的运算符外， 还提供了<code>++</code>和<code>--</code>来处理列表</p>
+
+<p><code>
+iex&gt; [1,2,3] ++ [4,5,6]
+[1,2,3,4,5,6]
+iex&gt; [1,2,3] -- [2]
+[1,3]
+</code></p>
+
+<p>通过<code>&lt;&gt;</code>拼接字符</p>
+
+<p><code>
+iex&gt; "foo" &lt;&gt; "bar"
+"foobar"
+</code></p>
+
+<p>elixir 提供3种布尔操作符<code>or, and , not</code>。 注意，第一个参数必须是布尔值</p>
+
+<p><code>
+iex&gt; true and true
+true
+iex&gt; false or is_atom(:example)
+true
+</code></p>
+
+<p>非布尔值会报错</p>
+
+<p><code>
+iex&gt; 1 and true
+** (ArgumentError) argument error
+</code></p>
+
+<p><code>or</code> 和 <code>and</code> 是短接操作符, 只有左侧无法判断结果时才会执行右侧函数</p>
+
+<p>```
+iex> false and error(&ldquo;This error will never be raised&rdquo;)
+false</p>
+
+<p>iex> true or error(&ldquo;This error will never be raised&rdquo;)
+true
+```</p>
+
+<p>除了之前的操作符，还有<code>||</code>,<code>&amp;&amp;</code>和<code>!</code>。 除了<code>false</code>和<code>nil</code>外，所有值都为true</p>
+
+<p>```</p>
+
+<h1>or</h1>
+
+<p>iex> 1 || true
+1
+iex> false || 11
+11</p>
+
+<h1>and</h1>
+
+<p>iex> nil &amp;&amp; 13
+nil
+iex> true &amp;&amp; 17
+17</p>
+
+<h1>!</h1>
+
+<p>iex> !true
+false
+iex> !1
+false
+iex> !nil
+true
+```</p>
+
+<p>按照通常经验，在期待返回布尔值时使用<code>and</code>、<code>or</code>和<code>not</code>，如果有非空参数值时，使用<code>&amp;&amp;</code>、<code>||</code>和<code>!</code></p>
+
+<p>Elixir也提供了 <code>==</code>, <code>!=</code>, <code>===</code>, <code>!==</code>, <code>&lt;=</code>, <code>&gt;=</code>, <code>&lt;</code>和<code>&gt;</code>作为对比操作符</p>
+
+<p><code>
+iex&gt; 1 == 1
+true
+iex&gt; 1 != 2
+true
+iex&gt; 1 &lt; 2
+true
+</code></p>
+
+<p><code>==</code>和<code>===</code>的不同点是<code>===</code>在对比整数和浮点数时更精确</p>
+
+<p><code>
+iex&gt; 1 == 1.0
+true
+iex&gt; 1 === 1.0
+false
+</code></p>
+
+<p>在Elixir里， 我们可以比较不同类型的值</p>
+
+<p><code>
+iex&gt; 1 &lt; :atom
+true
+</code></p>
+
+<p>能这么做的原因是Elixir按下列顺序做了排序</p>
+
+<p><code>
+number &lt; atom &lt; reference &lt; functions &lt; port &lt; pid &lt; tuple &lt; list &lt; bitstring
+</code></p>
+]]></content>
+  </entry>
+  
+</feed>

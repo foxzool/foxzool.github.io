@@ -9,7 +9,7 @@
   <meta name="author" content="ZoOL">
 
   
-  <meta name="description" content="在服务器上安装mysql时，报错，安装失败， 内容如下 &gt; sudo gem install mysql &gt; Building native extensions. This could take a while... &gt; ERROR: Error installing &hellip;">
+  <meta name="description" content="在安装pg时，系统报了如下的错误 /home/zool/.rvm/rubies/ruby-1.8.7-p302/bin/ruby extconf.rb checking for pg_config... no checking for libpq-fe.h... no Can&#39;t find &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +78,86 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/12/17/gem-install-pg-error-under-ubuntu/">Ubuntu下gem安装pg出错</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-12-17T00:00:00+08:00" pubdate data-updated="true">Dec 17<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>在安装pg时，系统报了如下的错误</p>
+
+<div>
+  <pre><code class='bash'>/home/zool/.rvm/rubies/ruby-1.8.7-p302/bin/ruby extconf.rb 
+    checking for pg_config... no
+    checking for libpq-fe.h... no
+    Can&#39;t find the &#39;libpq-fe.h header
+    *** extconf.rb failed ***
+    Could not create Makefile due to some reason, probably lack of
+    necessary libraries and/or headers.  Check the mkmf.log file for more
+    details.  You may need configuration options.
+
+    Provided configuration options:
+        --with-opt-dir
+    --without-opt-dir
+    --with-opt-include
+    --without-opt-include=${opt-dir}/include
+    --with-opt-lib
+    --without-opt-lib=${opt-dir}/lib
+    --with-make-prog
+    --without-make-prog
+    --srcdir=.
+    --curdir
+    --ruby=/home/zool/.rvm/rubies/ruby-1.8.7-p302/bin/ruby
+    --with-pg
+    --without-pg
+    --with-pg-config
+    --without-pg-config
+    --with-pg-dir
+    --without-pg-dir
+    --with-pg-include
+    --without-pg-include=${pg-dir}/include
+    --with-pg-lib
+    --without-pg-lib=${pg-dir}/lib</code></pre>
+</div>
+
+
+<p>请教GOOGLE大神后，找到如下解决方案</p>
+
+<div>
+  <pre><code class='bash'>sudo apt-get install libpq-dev libpq5</code></pre>
+</div>
+
+
+<p>安装更新后解决问题</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -968,6 +1048,10 @@ rails已经有一个配置文件了，在/paht/to/site/config/initializers/infle
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/11/04/start-elixir/">Start-elixir</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/10/25/start-new-blog/">Start New Blog</a>
       </li>
     
@@ -981,10 +1065,6 @@ rails已经有一个配置文件了，在/paht/to/site/config/initializers/infle
     
       <li class="post">
         <a href="/blog/2011/05/26/rails31rc1-execjs-error/">rails3.1rc1在服务器上运行报Could Not Find a JavaScript Runtime错误的解决方法</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2011/05/26/rails-footnotes/">Rails调试插件rails-footnotes使用说明</a>
       </li>
     
   </ul>

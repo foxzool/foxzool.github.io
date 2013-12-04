@@ -4,7 +4,7 @@
   <title><![CDATA[ZoOL => Blog]]></title>
   <link href="http://foxzool.github.io/atom.xml" rel="self"/>
   <link href="http://foxzool.github.io/"/>
-  <updated>2013-10-25T16:39:20+08:00</updated>
+  <updated>2013-12-04T17:07:53+08:00</updated>
   <id>http://foxzool.github.io/</id>
   <author>
     <name><![CDATA[ZoOL]]></name>
@@ -12,6 +12,346 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[start-elixir]]></title>
+    <link href="http://foxzool.github.io/blog/2013/11/04/start-elixir/"/>
+    <updated>2013-11-04T14:47:00+08:00</updated>
+    <id>http://foxzool.github.io/blog/2013/11/04/start-elixir</id>
+    <content type="html"><![CDATA[<h1>安装</h1>
+
+<p>在mac下直接用bundle安装</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>bundle update
+</span><span class='line'>bundle install elixir</span></code></pre></td></tr></table></div></figure>
+
+
+<p>其他Linux发行版也可以通过对应的包管理器进行下载安装。</p>
+
+<h1>进入命令行操作模式</h1>
+
+<p>在终端下运行 <code>iex</code></p>
+
+<p>查看命令行帮助
+<code>iex(1)&gt; h()</code></p>
+
+<h2>常用计算</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>iex&gt; 1 + 1
+</span><span class='line'>2
+</span><span class='line'>iex&gt; 10 - 5
+</span><span class='line'>5
+</span><span class='line'>iex&gt; 10 / 2
+</span><span class='line'>5.0</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>/</code> 默认返回的是浮点数(float)。 如果要获取整数或余数，使用<code>div</code>和<code>rem</code>函数</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>iex&gt; div(10, 2)
+</span><span class='line'>5
+</span><span class='line'>iex&gt; div 10, 2
+</span><span class='line'>5
+</span><span class='line'>iex&gt; rem 10, 3
+</span><span class='line'>1</span></code></pre></td></tr></table></div></figure>
+
+
+<p>很多时候可以把函数调用外层的括号省略掉</p>
+
+<h2>基本类型</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>iex&gt; 1          # 整数
+</span><span class='line'>iex&gt; 0x1F       # 整数
+</span><span class='line'>iex&gt; 1.0        # 浮点数
+</span><span class='line'>iex&gt; :atom      # 原子(可以理解为ruby里的symbol)
+</span><span class='line'>iex&gt; {1,2,3}    # 元组
+</span><span class='line'>iex&gt; [1,2,3]    # 列表
+</span><span class='line'>iex&gt; &lt;&lt;1,2,3&gt;&gt;  # 二进制流</span></code></pre></td></tr></table></div></figure>
+
+
+<p>获取元组/列表长度</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>iex&gt; size { 1, 2, 3 }
+</span><span class='line'>3
+</span><span class='line'>
+</span><span class='line'>iex&gt; length [ 1, 2, 3 ]
+</span><span class='line'>3</span></code></pre></td></tr></table></div></figure>
+
+
+<p>注意， 元组用size, 列表用length,  不然会出错。</p>
+
+<p>字符串原生支持UTF-8</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>iex&gt; "hellö"
+</span><span class='line'>"hellö"
+</span><span class='line'>iex&gt; "你好"
+</span><span class='line'>"你好"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>字符串支持插入(像ruby一样)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>iex&gt; name = "world"
+</span><span class='line'>iex&gt; "hello #{name}"
+</span><span class='line'>"hello world"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>说到底， 字符串就是由bytes组装的, 中文算3个字节</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>iex&gt; is_binary("hello")
+</span><span class='line'>true
+</span><span class='line'>iex&gt; byte_size("hello")
+</span><span class='line'>5
+</span><span class='line'>iex&gt; byte_size("你h好")
+</span><span class='line'>7</span></code></pre></td></tr></table></div></figure>
+
+
+<p>同样，字符串也是bytes组装的</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>iex&gt; is_bitstring("hello")
+</span><span class='line'>true
+</span><span class='line'>iex&gt; bit_size("hello")
+</span><span class='line'>40
+</span><span class='line'>iex&gt; bit_size("你h好")
+</span><span class='line'>56</span></code></pre></td></tr></table></div></figure>
+
+
+<p>组装二进制串</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>iex&gt; is_binary &lt;&lt;0, 0, 0&gt;&gt;
+</span><span class='line'>true</span></code></pre></td></tr></table></div></figure>
+
+
+<p>但单引号的字符串和双引号的字符串是不一样的，单引号的字符串是一个字符列表</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>iex&gt; is_binary('hello')
+</span><span class='line'>false
+</span><span class='line'>iex&gt; is_list('hello')
+</span><span class='line'>true</span></code></pre></td></tr></table></div></figure>
+
+
+<p>elixir 的布尔值为<code>true</code>和<code>false</code>， 同时他们也是原子类型</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>iex&gt; true
+</span><span class='line'>true
+</span><span class='line'>iex&gt; is_boolean false
+</span><span class='line'>true
+</span><span class='line'>iex&gt; is_atom(true)
+</span><span class='line'>true</span></code></pre></td></tr></table></div></figure>
+
+
+<p>elixir 通过<code>.</code>来调用匿名函数</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># function
+</span><span class='line'>iex&gt; x = fn(a, b) -&gt; a + b end
+</span><span class='line'>#Fun&lt;erl_eval.12.111823515&gt;
+</span><span class='line'>iex&gt; x.(1, 2)
+</span><span class='line'>3</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>操作符</h2>
+
+<p>elixir 除了 <code>+, -, *, /</code>这4个基本的运算符外， 还提供了<code>++</code>和<code>--</code>来处理列表</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>iex&gt; [1,2,3] ++ [4,5,6]
+</span><span class='line'>[1,2,3,4,5,6]
+</span><span class='line'>iex&gt; [1,2,3] -- [2]
+</span><span class='line'>[1,3]</span></code></pre></td></tr></table></div></figure>
+
+
+<p>通过<code>&lt;&gt;</code>拼接字符</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>iex&gt; "foo" &lt;&gt; "bar"
+</span><span class='line'>"foobar"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>elixir 提供3种布尔操作符<code>or, and , not</code>。 注意，第一个参数必须是布尔值</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>iex&gt; true and true
+</span><span class='line'>true
+</span><span class='line'>iex&gt; false or is_atom(:example)
+</span><span class='line'>true</span></code></pre></td></tr></table></div></figure>
+
+
+<p>非布尔值会报错</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>iex&gt; 1 and true
+</span><span class='line'>** (ArgumentError) argument error</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>or</code> 和 <code>and</code> 是短接操作符, 只有左侧无法判断结果时才会执行右侧函数</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>iex&gt; false and error("This error will never be raised")
+</span><span class='line'>false
+</span><span class='line'>
+</span><span class='line'>iex&gt; true or error("This error will never be raised")
+</span><span class='line'>true</span></code></pre></td></tr></table></div></figure>
+
+
+<p>除了之前的操作符，还有<code>||</code>,<code>&amp;&amp;</code>和<code>!</code>。 除了<code>false</code>和<code>nil</code>外，所有值都为true</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># or
+</span><span class='line'>iex&gt; 1 || true
+</span><span class='line'>1
+</span><span class='line'>iex&gt; false || 11
+</span><span class='line'>11
+</span><span class='line'>
+</span><span class='line'># and
+</span><span class='line'>iex&gt; nil && 13
+</span><span class='line'>nil
+</span><span class='line'>iex&gt; true && 17
+</span><span class='line'>17
+</span><span class='line'>
+</span><span class='line'># !
+</span><span class='line'>iex&gt; !true
+</span><span class='line'>false
+</span><span class='line'>iex&gt; !1
+</span><span class='line'>false
+</span><span class='line'>iex&gt; !nil
+</span><span class='line'>true</span></code></pre></td></tr></table></div></figure>
+
+
+<p>按照通常经验，在期待返回布尔值时使用<code>and</code>、<code>or</code>和<code>not</code>，如果有非空参数值时，使用<code>&amp;&amp;</code>、<code>||</code>和<code>!</code></p>
+
+<p>Elixir也提供了 <code>==</code>, <code>!=</code>, <code>===</code>, <code>!==</code>, <code>&lt;=</code>, <code>&gt;=</code>, <code>&lt;</code>和<code>&gt;</code>作为对比操作符</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>iex&gt; 1 == 1
+</span><span class='line'>true
+</span><span class='line'>iex&gt; 1 != 2
+</span><span class='line'>true
+</span><span class='line'>iex&gt; 1 &lt; 2
+</span><span class='line'>true</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>==</code>和<code>===</code>的不同点是<code>===</code>在对比整数和浮点数时更精确</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>iex&gt; 1 == 1.0
+</span><span class='line'>true
+</span><span class='line'>iex&gt; 1 === 1.0
+</span><span class='line'>false</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在Elixir里， 我们可以比较不同类型的值</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>iex&gt; 1 &lt; :atom
+</span><span class='line'>true</span></code></pre></td></tr></table></div></figure>
+
+
+<p>能这么做的原因是Elixir按下列顺序做了排序</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>number &lt; atom &lt; reference &lt; functions &lt; port &lt; pid &lt; tuple &lt; list &lt; bitstring</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[start new blog]]></title>
@@ -1114,39 +1454,6 @@ end</code></pre>
  =&gt; [#&lt;User id: 1, username: &quot;zool&quot;, created_at: &quot;2010-12-30 12:09:42&quot;, updated_at: &quot;2010-12-30 12:09:42&quot;, deleted: true&gt;] 
 &gt;User.where(&quot;id = 1&quot;).to_sql
  =&gt; &quot;SELECT \&quot;users\&quot;.* FROM \&quot;users\&quot; WHERE ((\&quot;users\&quot;.\&quot;deleted\&quot; IS NULL OR \&quot;users\&quot;.\&quot;deleted\&quot; = &#39;f&#39;)) AND (id = 1)&quot;</code></pre>
-</div>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[rails中文配置]]></title>
-    <link href="http://foxzool.github.io/blog/2010/12/30/Chinese-rails-configuration/"/>
-    <updated>2010-12-30T00:00:00+08:00</updated>
-    <id>http://foxzool.github.io/blog/2010/12/30/Chinese-rails-configuration</id>
-    <content type="html"><![CDATA[<p>rails默认为英文，像一些model的验证提示都是英文。
-按下面方法将其汉化</p>
-
-<p>首先，在<a href="https://github.com/svenfuchs/rails-i18n/tree/master/rails/locale">https://github.com/svenfuchs/rails-i18n/tree/master/rails/locale</a>下载相应的语言包</p>
-
-<p>中文选择 zh-CN.yml   ,将其下载到config/locale下面</p>
-
-<p>然后在config/application.rb里加入下面的配置</p>
-
-<div>
-  <pre><code class='bash'>config.i18n.default_locale = :&#39;zh-CN&#39;</code></pre>
-</div>
-
-
-<p>这句话的意思是将rails的语言包默认为简体中文</p>
-
-<p>然后重启服务器即可</p>
-
-<p>效果</p>
-
-<div>
-  <pre><code class='bash'>ruby-1.8.7-p302 &gt; I18n.l Time.now
- =&gt; &quot;2010年12月30日 星期四 10:11:21 CST&quot;</code></pre>
 </div>
 
 ]]></content>

@@ -9,7 +9,8 @@
   <meta name="author" content="ZoOL">
 
   
-  <meta name="description" content="根据网上的源码改编 ruby -e &quot;((1..20).to_a+[6]*4).each{|i|puts (&#39;#&#39;*i*2).center(80)};puts;puts &#39;Happy New Year&#39;.center(80)&quot; &hellip;">
+  <meta name="description" content="rails默认为英文，像一些model的验证提示都是英文。
+按下面方法将其汉化 首先，在https://github.com/svenfuchs/rails-i18n/tree/master/rails/locale下载相应的语言包 中文选择 zh-CN.yml ,将其下载到config/ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +79,66 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/12/30/Chinese-rails-configuration/">Rails中文配置</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-12-30T00:00:00+08:00" pubdate data-updated="true">Dec 30<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>rails默认为英文，像一些model的验证提示都是英文。
+按下面方法将其汉化</p>
+
+<p>首先，在<a href="https://github.com/svenfuchs/rails-i18n/tree/master/rails/locale">https://github.com/svenfuchs/rails-i18n/tree/master/rails/locale</a>下载相应的语言包</p>
+
+<p>中文选择 zh-CN.yml   ,将其下载到config/locale下面</p>
+
+<p>然后在config/application.rb里加入下面的配置</p>
+
+<div>
+  <pre><code class='bash'>config.i18n.default_locale = :&#39;zh-CN&#39;</code></pre>
+</div>
+
+
+<p>这句话的意思是将rails的语言包默认为简体中文</p>
+
+<p>然后重启服务器即可</p>
+
+<p>效果</p>
+
+<div>
+  <pre><code class='bash'>ruby-1.8.7-p302 &gt; I18n.l Time.now
+ =&gt; &quot;2010年12月30日 星期四 10:11:21 CST&quot;</code></pre>
+</div>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -720,83 +781,6 @@ end</code></pre>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/12/18/Message-using-the-disqus-system-as-a-site/">使用disqus作为本站的留言系统</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-12-18T00:00:00+08:00" pubdate data-updated="true">Dec 18<span>th</span>, 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>disqus是国外的一个强大的留言系统，不仅可以单对单进行留言，还可以使用facebook,twitter等帐号进行评论互动。</p>
-
-<p>首先去他们官网进行注册  <a href="http://disqus.com">disqus网址</a>
-在注册后，你会得到你的网站的一个shortname，本站是zoolblog</p>
-
-<p>然后在需要加入留言的地方加入下面的代码</p>
-
-<div>
-  <pre><code class='ruby'>&lt;div id=&quot;disqus_thread&quot;&gt;&lt;/div&gt;
-  &lt;script type=&quot;text/javascript&quot;&gt;
-      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-      var disqus_shortname = &#39;example&#39;; // required: replace example with your forum shortname
-  
-      // The following are highly recommended additional parameters. Remove the slashes in front to use.
-      // var disqus_identifier = &#39;unique_dynamic_id_1234&#39;;
-      // var disqus_url = &#39;http://example.com/permalink-to-page.html&#39;;
-  
-      /* * * DON&#39;T EDIT BELOW THIS LINE * * */
-      (function() {
-          var dsq = document.createElement(&#39;script&#39;); dsq.type = &#39;text/javascript&#39;; dsq.async = true;
-          dsq.src = &#39;http://&#39; + disqus_shortname + &#39;.disqus.com/embed.js&#39;;
-          (document.getElementsByTagName(&#39;head&#39;)[0] || document.getElementsByTagName(&#39;body&#39;)[0]).appendChild(dsq);
-      })();
-  &lt;/script&gt;
-  &lt;noscript&gt;Please enable JavaScript to view the &lt;a href=&quot;http://disqus.com/?ref_noscript&quot;&gt;comments powered by Disqus.&lt;/a&gt;&lt;/noscript&gt;
-  &lt;a href=&quot;http://disqus.com&quot; class=&quot;dsq-brlink&quot;&gt;blog comments powered by &lt;span class=&quot;logo-disqus&quot;&gt;Disqus&lt;/span&gt;&lt;/a&gt;</code></pre>
-</div>
-
-
-<p>这里有三个值要注意</p>
-
-<div>
-  <pre><code class='bash'>disqus_shortname #为你在网站上获得shortname,本站为zoolblog
-
-disqus_identifier #为当前页面的唯一值，默认为当前网页url
-
-disqus_url #为页面的显示url，默认为当前网页url</code></pre>
-</div>
-
-
-<p>这里说明一下disqus_identifier和disqus_url的区别
-disqus_url一般是网页的slug， 比如说post/1可以用slug方式显示的话，是post/creat-my-rails-app这样的格式，由于slug有时会变化，所以需要disqus_identifier来帮忙，这个是一个网页slug不管怎么变化都一致的值。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -814,6 +798,10 @@ disqus_url一般是网页的slug， 比如说post/1可以用slug方式显示的�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/11/04/start-elixir/">Start-elixir</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/10/25/start-new-blog/">Start New Blog</a>
       </li>
     
@@ -827,10 +815,6 @@ disqus_url一般是网页的slug， 比如说post/1可以用slug方式显示的�
     
       <li class="post">
         <a href="/blog/2011/05/26/rails31rc1-execjs-error/">rails3.1rc1在服务器上运行报Could Not Find a JavaScript Runtime错误的解决方法</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2011/05/26/rails-footnotes/">Rails调试插件rails-footnotes使用说明</a>
       </li>
     
   </ul>
